@@ -1,0 +1,22 @@
+extends ./templates/container.pug
+block content
+    section.hero
+      p.hero__text.m-0 
+        | Users
+    .row.mb-4
+        .col-12
+            a.btn.btn-primary(href="/users/create") Create
+    .row.mb-4
+        each user in users
+            .col-sm-12.col-md-4
+                .card.mb-4
+                    .card-body
+                        .card-title= user.username
+                        p.card-text Transactions: #{user.transactions}
+                        p.card-text Created: #{user.createdDate}
+                        .row.g-2
+                            .col-3
+                                a(href=`/users/edit/${user.id}`).btn.btn-primary Edit
+                            .col-3
+                                a(href=`/users/delete/${user.id}` class= (authUser == user.id ? "disabled": "fffff")).btn.btn-primary Delete
+    

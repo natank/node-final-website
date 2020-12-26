@@ -1,0 +1,18 @@
+nav.navbar.navbar--primary.navbar-expand-lg.navbar-light
+  a.navbar-brand.text-decoration-none(href='/') 
+    h2.navbar-brand__main Movies
+  button.navbar-toggler(type='button' data-toggle='collapse' 
+    data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  .collapse.navbar-collapse#navbarSupportedContent.justify-content-end
+    ul.navbar-nav
+      li.nav-item
+        if !isLoggedIn
+          a(href='/login').nav-link.text-secondary.text-decoration-none
+            span.glyphicon.glyphicon-log-in
+            |  Login
+        else
+
+          a(href='/logout' role='button' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false").nav-link#navbarDropdown.text-secondary.text-decoration-none
+            | logout
+
