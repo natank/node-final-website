@@ -1,19 +1,24 @@
-import mongoose from 'mongoose';
-import * as UserData from './UserData';
-import * as UserPermissions from './UserPermissions';
+import userCredentials from './UserCredentials';
+import * as userPermissions from './UserPermissions';
+import * as userData from './UserData';
+import UserCredentials from './UserCredentials';
 
-const user = new mongoose.Schema({
-	name: {
-		type: String,
-	},
-	password: {
-		type: String,
-	},
-});
+export async function createUser(settings) {
+	var {
+		username,
+		firstName,
+		lastName,
+		sessionTimeOut,
+		permissions,
+		password,
+		isAdmin,
+	} = settings;
 
-user.post('save', function (doc) {
-	console.log(`${doc._id} has been initialized from the db`);
-	console.log(doc);
-});
-
-export default mongoose.model('user', user);
+	var userCredentials = new UserCredentials({ username, password });
+	try {
+		userCredentials = await userCredentials.save();
+	} catch (err) {
+		throw err;
+	}
+	console.log(userCredentials);
+}

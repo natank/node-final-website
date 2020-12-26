@@ -4,6 +4,7 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
 
+import connectDB from './DB/Connection';
 import menuRoutes from './routes/menu';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
@@ -14,6 +15,8 @@ import * as User from './models/User';
 
 import { isLoggedIn, isAdmin } from './BL/middleware/auth';
 import hasTransactions from './BL/middleware/hasTransactions';
+
+connectDB();
 
 const isProd = process.env.NODE_ENV === 'production';
 let webpackDevMiddleware;
@@ -138,7 +141,7 @@ app.get('/login', authController.getLogin);
 app.get('/logout', authController.getLogout);
 
 /**User Routes */
-app.use('/users', isAdmin, hasTransactions, userRouter);
+app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
 
 /**Auth Routes */
 app.use('/auth', authRouter);

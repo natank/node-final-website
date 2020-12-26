@@ -58,7 +58,8 @@ export async function postCreateUser(req, res, next) {
 		password: hashedPassword,
 		isAdmin,
 	});
-	res.status.json(user);
+
+	res.status(200).end();
 }
 
 export async function postUpdateUser(req, res, next) {

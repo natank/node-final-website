@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 require('@babel/register');
 
 if (process.env.NODE_ENV !== 'production') {
