@@ -49,12 +49,6 @@ export async function postLogin(req, res, next) {
 	}
 }
 
-export async function postSignup(req, res, next) {
-	const errors = validationResult(req);
-	const { username, password } = req.body;
-	let hashedPassword = await bcrypt.hash(password, 12);
-}
-
 exports.getLogout = async (req, res, next) => {
 	try {
 		await req.session.destroy();

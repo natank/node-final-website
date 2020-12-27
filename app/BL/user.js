@@ -49,7 +49,7 @@ export async function postCreateUser(req, res, next) {
 	} = req.body;
 	let hashedPassword = await bcrypt.hash(password, 12);
 
-	var user = await User.createUser({
+	await User.createUser({
 		username,
 		firstName,
 		lastName,
@@ -65,16 +65,27 @@ export async function postCreateUser(req, res, next) {
 export async function postUpdateUser(req, res, next) {
 	var users = await User.getUsers();
 	var { id } = req.params;
-	var { username, password, transactions, isAdmin } = req.body;
+	var { 
+		username,
+		firstName,
+		lastName,
+		sessionTimeOut,
+		permissions
+	} = req.body;
 
-	var user = users.find(user => user.id == id);
+	try{
 
-	user = { ...user, username, transactions, isAdmin };
-	try {
-		await User.updateUser(user);
-	} catch (err) {
-		console.log(err);
+		await User.updateUser({
+			id,
+			username,
+			firstName,
+			lastName,
+			sessionTimeOut,
+			permissions
+		})
+	} catch(err){
+		res.status(500).end()
+		throw(err)
 	}
-
-	res.redirect('/users');
+	res.status(200).end()
 }

@@ -11,8 +11,9 @@ export async function createUser(settings) {
 		sessionTimeOut,
 		permissions,
 		password,
-		isAdmin,
 	} = settings;
+	
+	var userId;
 
 	var userCredentials = new UserCredentials({ username, password });
 	try {
@@ -20,5 +21,28 @@ export async function createUser(settings) {
 	} catch (err) {
 		throw err;
 	}
-	console.log(userCredentials);
+
+	userId = userCredentials._id.toString();
+
+	// var { userId, permissions } = settings;
+	var settings = {userId, permissions}
+	await userPermissions.createUser(settings)
+	settings = {userId,firstName, lastName, sessionTimeOut }
+	await userData.createUser(settings)
+}
+
+
+export async function updateUser(settings){
+	var {
+		id,
+		username,
+		firstName,
+		lastName,
+		sessionTimeOut,
+		permissions
+	} = settings;
+	
+	await userPermissions.updateUser(permissions, id)
+
+
 }

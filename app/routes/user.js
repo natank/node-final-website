@@ -5,12 +5,11 @@ const router = express.Router();
 
 router.get('/', userController.getUsers);
 router.get('/create', userController.getCreateUser);
-router.get('/update', userController.getUpdateUser);
+router.get('/update:id', userController.getUpdateUser);
 router.get('/:id', userController.getUser);
 router.get('/delete/:id', userController.deleteUser);
-router.get('/edit/:id', userController.getUpdateUser);
 
 router.post('/create', userController.postCreateUser);
-router.post('/edit/:id', userController.postUpdateUser);
+router.post('/update/:id', userController.postUpdateUser);
 
 module.exports = router;
