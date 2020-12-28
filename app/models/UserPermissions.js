@@ -1,22 +1,22 @@
-import * as userPermissionsDal from '../DAL/userPermissions';
+import * as usersDal from '../DAL/userPermissions';
 
 export async function createUser(settings) {
-	var usersData = await userPermissionsDal.getUsers();
+	var usersData = await usersDal.getUsers();
 	if (!usersData) usersData = [];
 
 	var { userId, permissions } = settings;
 	usersData.push({ userId, permissions });
-	await userPermissionsDal.writeUsers(usersData);
+	await usersDal.writeUsers(usersData);
 }
 
-export async function getUser(userId) {
-	var users = await userPermissionsDal.getUsers();
+export async function findById(userId) {
+	var users = await usersDal.getUsers();
 	var user = users.find(user => user.userId == userId);
-	return user;
+	return user.permissions;
 }
 
-export async function updateUser(newPermissions, userId) {
-	var users = await userPermissionsDal.getUsers();
+export async function updateUser(userId, newPermissions) {
+	var users = await usersDal.getUsers();
 	var user = users.find(user => user.userId == userId);
 	user.permissions = newPermissions;
 	await usersDal.writeUsers(users);
@@ -24,8 +24,7 @@ export async function updateUser(newPermissions, userId) {
 
 export async function deleteUser(id) {
 	var users = await usersDal.getUsers();
-	users = users.filter(user => user.id != id);
+	users = users.filter(user => user.userId != id);
 
-	usersData.users = users;
-	await usersDal.writeUsers(usersData);
+	await usersDal.writeUsers(users);
 }

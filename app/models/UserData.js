@@ -17,28 +17,26 @@ export async function getUsers() {
 
 export async function findById(id) {
 	var users = await getUsers();
-	var user = users.find(user => user._id == id);
+	var user = users.find(user => user.userId == id);
 	return user;
 }
 
-export async function updateUser(user) {
+export async function updateUser(userId, newData) {
 	var users = await usersDal.getUsers();
-	var oldUser = users.find(currUser => currUser._id == user._id);
-	// Update only the keys provided to the function
-	Object.keys(user).forEach(key => {
-		oldUser[key] = user[key];
+
+	var user = users.find(currUser => currUser.userId == userId);
+	Object.keys(newData).forEach(key => {
+		user[key] = newData[key];
 	});
 
-	await usersDal.writeUsers(usersData);
+	await usersDal.writeUsers(users);
 }
 
 export async function deleteUser(id) {
-	var usersData = await usersDal.getUsers();
-	var { users, index } = usersData;
+	var users = await usersDal.getUsers();
 	users = users.filter(currUser => {
-		var result = currUser.id != id;
+		var result = currUser.userId != id;
 		return result;
 	});
-	usersData.users = users;
-	await usersDal.writeUsers(usersData);
+	await usersDal.writeUsers(users);
 }

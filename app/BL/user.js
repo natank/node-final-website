@@ -13,8 +13,15 @@ export async function getUsers(req, res, next) {
 	res.render('./users', { users, authUser: req.user.id });
 }
 
-export function getUser(req, res, next) {
-	res.render('/user', {});
+export async function getUser(req, res, next) {
+	var userId = req.params.id;
+	try {
+		var user = await User.findById(userId);
+		res.status(200).json(user);
+	} catch (err) {
+		res.status(500).end();
+		throw err;
+	}
 }
 
 export function getCreateUser(req, res, next) {
@@ -29,12 +36,19 @@ export async function getUpdateUser(req, res, next) {
 
 export async function deleteUser(req, res, next) {
 	var { id } = req.params;
+	req.user = { id: 1 };
 	//Prevent deleting the current user
 	if (req.user && req.user.id != id) {
-		await User.deleteUser(id);
+		try {
+			await User.deleteUser(id);
+			res.status(200).end();
+		} catch (err) {
+			res.status(500).end();
+			throw err;
+		}
+	} else {
+		res.status(204).end();
 	}
-
-	res.redirect('/users');
 }
 
 export async function postCreateUser(req, res, next) {
@@ -63,29 +77,21 @@ export async function postCreateUser(req, res, next) {
 }
 
 export async function postUpdateUser(req, res, next) {
-	var users = await User.getUsers();
 	var { id } = req.params;
-	var { 
-		username,
-		firstName,
-		lastName,
-		sessionTimeOut,
-		permissions
-	} = req.body;
+	var { username, firstName, lastName, sessionTimeOut, permissions } = req.body;
 
-	try{
-
+	try {
 		await User.updateUser({
 			id,
 			username,
 			firstName,
 			lastName,
 			sessionTimeOut,
-			permissions
-		})
-	} catch(err){
-		res.status(500).end()
-		throw(err)
+			permissions,
+		});
+	} catch (err) {
+		res.status(500).end();
+		throw err;
 	}
-	res.status(200).end()
+	res.status(200).end();
 }

@@ -1,24 +1,24 @@
+import * as Subscriptions from '../models/Subscriptions';
+
 export async function getMovies(req, res, next) {
-	var { name, language, genre } = req.query;
+	var { name, genres } = req.query;
 	try {
-		const movies = undefined;
-		const allGenres = undefined;
-		res.render('./movies', {
-			genres: allGenres,
-			movies,
-		});
+		var movies = await Subscriptions.getMovies({ name, genres });
+		res.status(200).json(movies);
 	} catch (err) {
-		next(err);
+		res.status(500).end();
+		throw err;
 	}
 }
 
 export async function getMovie(req, res, next) {
 	try {
-		const movie = undefined;
-
-		res.render('./movie', { movie });
+		const movieId = req.params.id;
+		var movie = await Subscriptions.getMovie(movieId);
+		res.status(200).json(movie);
 	} catch (err) {
-		next(err);
+		res.status(500).end();
+		throw err;
 	}
 }
 
@@ -34,7 +34,7 @@ export async function getCreateMovie(req, res, next) {
 	}
 }
 
-export async function postCreateMovie(req, res, next) {
+export async function createMovie(req, res, next) {
 	const { name, language, genres } = req.body;
 	var isMultiSelect = Array.isArray(genres);
 	var sanitizedGenres = isMultiSelect ? genres : [genres];
@@ -45,3 +45,7 @@ export async function postCreateMovie(req, res, next) {
 		next(err);
 	}
 }
+
+export async function deleteMovie(req, res, next) {}
+
+export async function updateMovie(req, res, next) {}

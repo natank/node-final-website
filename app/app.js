@@ -8,6 +8,7 @@ import connectDB from './DB/Connection';
 import menuRoutes from './routes/menu';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
+import movieRouter from './routes/movies';
 
 import * as moviesController from './BL/movies';
 import * as authController from './BL/auth';
@@ -99,48 +100,49 @@ const generalMW = (function (app) {
 	app.use(express.static(path.join(__dirname, '../fonts')));
 })(app);
 
-const userMW = (function (app) {
-	app.use(async (req, res, next) => {
-		if (req.session.user) {
-			try {
-				let user = await User.findById(req.session.user.id);
-				if (user) {
-					req.user = user;
-				}
-			} catch (err) {
-				throw new Error(err);
-			}
-		}
-		next();
-	});
-})(app);
+// const userMW = (function (app) {
+// 	app.use(async (req, res, next) => {
+// 		if (req.session.user) {
+// 			try {
+// 				let user = await User.findById(req.session.user.id);
+// 				if (user) {
+// 					req.user = user;
+// 				}
+// 			} catch (err) {
+// 				throw new Error(err);
+// 			}
+// 		}
+// 		next();
+// 	});
+// })(app);
 
 /**Menu Routes */
 app.use('/', menuRoutes);
 
 /**Movies Routes */
 app.get('/search', isLoggedIn, hasTransactions, moviesController.getMovies);
-app.get(
-	'/create',
-	isLoggedIn,
-	hasTransactions,
-	moviesController.getCreateMovie
-);
-app.post(
-	'/create',
-	isLoggedIn,
-	hasTransactions,
-	moviesController.postCreateMovie
-);
-app.get('/movies/:id', isLoggedIn, hasTransactions, moviesController.getMovie);
+
+// app.get(
+// 	'/create',
+// 	isLoggedIn,
+// 	hasTransactions,
+// 	moviesController.getCreateMovie
+// );
+
+app.use('/movies', movieRouter);
+
+app.post('/create', isLoggedIn, hasTransactions, moviesController.createMovie);
+// app.get('/movies/:id', isLoggedIn, hasTransactions, moviesController.getMovie);
+
 app.get('/login', authController.getLogin);
 app.get('/logout', authController.getLogout);
 
 /**User Routes */
-app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
+// app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
 
 /**Auth Routes */
-app.use('/auth', authRouter);
+// app.use('/auth', authRouter);
+
 app.use(function notFound(req, res) {
 	res.render('error', { message: "That page doesn't exist" });
 });
