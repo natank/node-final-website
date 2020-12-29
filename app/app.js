@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
-import bodyParser from 'body-parser';
 import flash from 'connect-flash';
 
 import connectDB from './DB/Connection';
@@ -9,8 +8,10 @@ import menuRoutes from './routes/menu';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
 import movieRouter from './routes/movies';
+import memberRouter from './routes/members';
 
 import * as moviesController from './BL/movies';
+
 import * as authController from './BL/auth';
 import * as User from './models/User';
 
@@ -131,8 +132,9 @@ app.get('/search', isLoggedIn, hasTransactions, moviesController.getMovies);
 
 app.use('/movies', movieRouter);
 
+/**Members Routes */
+app.use('/members', memberRouter);
 app.post('/create', isLoggedIn, hasTransactions, moviesController.createMovie);
-// app.get('/movies/:id', isLoggedIn, hasTransactions, moviesController.getMovie);
 
 app.get('/login', authController.getLogin);
 app.get('/logout', authController.getLogout);

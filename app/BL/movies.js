@@ -23,29 +23,47 @@ export async function getMovie(req, res, next) {
 }
 
 export async function getCreateMovie(req, res, next) {
+	var {name, genres, image, premiered} = req.body
 	try {
-		var genres = undefined;
-		res.render('movieForm', {
-			genres,
-			renderAs: 'new',
-		});
+		var movie = Subscriptions.createMovie(name, genres,image, premiered)
+		res.status(200).json(movie)
 	} catch (err) {
+		res.status(500).end()
 		next(err);
 	}
 }
 
 export async function createMovie(req, res, next) {
-	const { name, language, genres } = req.body;
-	var isMultiSelect = Array.isArray(genres);
-	var sanitizedGenres = isMultiSelect ? genres : [genres];
+	const { name, genres, image, premiered } = req.body;
+	
 	try {
-		await Movie.createMovie({ name, language, genres: sanitizedGenres });
-		res.render('./menu');
+		var movie = await Subscriptions.createMovie({ name, genres, image, premiered });
+		res.status(200).json(movie)
 	} catch (err) {
+		console.log(err)
 		next(err);
 	}
 }
 
-export async function deleteMovie(req, res, next) {}
+export async function deleteMovie(req, res, next) {
+	var {id} = req.params
+	try {
+		await Subscriptions.deleteMovie(id)
+		res.status(200).end()
+	} catch(err){
+		console.log(err)
+		res.status(500).end()
+	}}
 
-export async function updateMovie(req, res, next) {}
+export async function updateMovie(req, res, next) {
+	var {name, genres, image, premiered} = req.body
+	var {id} = req.params
+	try{
+		var movie = await Subscriptions.updateMovie({id, name, genres, image, premiered})
+		res.status(200).json(movie)
+	} catch(err){
+		res.status(500).end()
+		console.log(err)
+	}
+}
+
