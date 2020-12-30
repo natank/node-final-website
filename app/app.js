@@ -9,6 +9,7 @@ import authRouter from './routes/auth';
 import userRouter from './routes/user';
 import movieRouter from './routes/movies';
 import memberRouter from './routes/members';
+import subscriptionRouter from './routes/subscriptions';
 
 import * as moviesController from './BL/movies';
 
@@ -134,6 +135,10 @@ app.use('/movies', movieRouter);
 
 /**Members Routes */
 app.use('/members', memberRouter);
+
+/**Subscriptions Routes */
+app.use('/subscriptions', subscriptionRouter);
+
 app.post('/create', isLoggedIn, hasTransactions, moviesController.createMovie);
 
 app.get('/login', authController.getLogin);
