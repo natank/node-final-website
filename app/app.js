@@ -65,7 +65,7 @@ const sessionMW = (function (app) {
 		session({
 			secret: 'keyboard cat',
 			resave: false,
-			saveUninitialized: true,
+			saveUninitialized: false,
 		})
 	);
 })(app);
@@ -145,10 +145,10 @@ app.get('/login', authController.getLogin);
 app.get('/logout', authController.getLogout);
 
 /**User Routes */
-// app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
+app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
 
 /**Auth Routes */
-// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 app.use(function notFound(req, res) {
 	res.render('error', { message: "That page doesn't exist" });

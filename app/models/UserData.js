@@ -1,9 +1,21 @@
 import * as usersDal from '../DAL/UserData';
 
 export async function createUser(settings) {
-	var users = await usersDal.getUsers();
-	if (!users) users = [];
-	var createdDate = new Date(Date.now()).toDateString();
+	var users;
+	try {
+		users = await usersDal.getUsers();
+		if(!users) users=[];
+	} catch (error) {
+		users = [];
+	}
+	var createdDate = new Date(Date.now())
+	var mm = createdDate.getMonth() + 1;
+	var dd = createdDate.getDate();
+	var yy = createdDate.getFullYear();
+	createdDate = `${yy}-${mm}-${dd}`
+	
+
+
 	var user = { ...settings, createdDate };
 	users.push(user);
 	await usersDal.writeUsers(users);

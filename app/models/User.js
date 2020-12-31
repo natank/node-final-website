@@ -1,4 +1,4 @@
-import userCredentials from './userCredentials';
+import UserCredentials from './userCredentials';
 import * as userPermissions from './UserPermissions';
 import * as userData from './UserData';
 
@@ -14,7 +14,7 @@ export async function createUser(settings) {
 
 	var userId;
 
-	var userCredentials = new userCredentials({ username, password });
+	var userCredentials = new UserCredentials({ name: username, password });
 	try {
 		userCredentials = await userCredentials.save();
 	} catch (err) {
@@ -26,7 +26,8 @@ export async function createUser(settings) {
 	// var { userId, permissions } = settings;
 	var settings = { userId, permissions };
 	await userPermissions.createUser(settings);
-	settings = { userId, firstName, lastName, sessionTimeOut, createdDate };
+
+	settings = { userId, firstName, lastName, sessionTimeOut };
 	await userData.createUser(settings);
 }
 

@@ -18,9 +18,10 @@ export async function postLogin(req, res, next) {
 	const errors = validationResult(req);
 	const { username, password } = req.body;
 
-	if (errors.isEmpty()) await signInUser();
-	else cancelSignIn();
-
+	// if (errors.isEmpty()) await signInUser();
+	// else cancelSignIn();
+	signInUser();
+	
 	async function signInUser() {
 		req.session.user = req.user;
 		var today = new Date(Date.now()).toDateString();
