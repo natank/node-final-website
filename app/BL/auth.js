@@ -3,7 +3,9 @@ import { validationResult } from 'express-validator/check';
 import * as User from '../models/User';
 import bcrypt from 'bcryptjs';
 
+
 export async function getLogin(req, res, next) {
+
 	res.render('login', {
 		errorMessage: req.flash('error'),
 		oldInput: {
@@ -20,7 +22,8 @@ export async function postLogin(req, res, next) {
 
 	// if (errors.isEmpty()) await signInUser();
 	// else cancelSignIn();
-	signInUser();
+	// signInUser();
+	logInUser()
 	
 	async function signInUser() {
 		req.session.user = req.user;
@@ -38,6 +41,10 @@ export async function postLogin(req, res, next) {
 		res.redirect('/');
 	}
 
+	async function logInUser(){
+		req.session.isLoggedIn = true;
+		res.redirect('/')
+	}
 	function cancelSignIn() {
 		res.status(422).render('login', {
 			errorMessage: errors.array()[0].msg,

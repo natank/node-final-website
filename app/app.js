@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
+import connectMongoDBSession from 'connect-mongodb-session'
+
 import flash from 'connect-flash';
 
 import connectDB from './DB/Connection';
@@ -21,6 +23,12 @@ import hasTransactions from './BL/middleware/hasTransactions';
 
 connectDB();
 
+const MongoDBStore = connectMongoDBSession(session)
+
+const store = new MongoDBStore({
+	uri: process.env.DB_URI,
+	collection: 'sessions'
+})
 const isProd = process.env.NODE_ENV === 'production';
 let webpackDevMiddleware;
 let webpackHotMiddleware;
@@ -66,6 +74,7 @@ const sessionMW = (function (app) {
 			secret: 'keyboard cat',
 			resave: false,
 			saveUninitialized: false,
+			store
 		})
 	);
 })(app);
