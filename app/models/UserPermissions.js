@@ -1,10 +1,10 @@
 import * as usersDal from '../DAL/userPermissions';
 
 export async function createUser(settings) {
-	var users
+	var users;
 	try {
 		users = await usersDal.getUsers();
-		if(!users) users=[];
+		if (!users) users = [];
 	} catch (error) {
 		users = [];
 	}

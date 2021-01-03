@@ -7,12 +7,13 @@ nav.navbar.navbar--primary.navbar-expand-lg.navbar-light
   .collapse.navbar-collapse#navbarSupportedContent.justify-content-end
     ul.navbar-nav
       li.nav-item
-        if !isLoggedIn
+        if authUser
+            .nav-link.text-capitalize Hello #{authUser.firstName}
+      li.nav-item
+        if !authUser
           a(href='/login').nav-link.text-secondary.text-decoration-none
-            span.glyphicon.glyphicon-log-in
             |  Login
         else
-
           a(href='/logout' role='button' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false").nav-link#navbarDropdown.text-secondary.text-decoration-none
-            | logout
+            span logout
 

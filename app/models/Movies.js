@@ -1,11 +1,9 @@
 import subscriptionsApi from '../API/subscriptions';
 
-export async function getSubscriptions({ memberId, movieId }) {
-	var response = await subscriptionsApi.get('/subscriptions', {
-		data: {
-			memberId,
-			movieId,
-		},
+export async function findMovies({ name, genres }) {
+	var response = await subscriptionsApi.get('/movies', {
+		name,
+		genres,
 	});
 	return response.data;
 }

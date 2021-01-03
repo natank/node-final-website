@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
-import connectMongoDBSession from 'connect-mongodb-session'
+import connectMongoDBSession from 'connect-mongodb-session';
 
 import flash from 'connect-flash';
 
@@ -12,6 +12,7 @@ import userRouter from './routes/user';
 import movieRouter from './routes/movies';
 import memberRouter from './routes/members';
 import subscriptionRouter from './routes/subscriptions';
+import setLocals from './BL/middleware/setLocals';
 
 import * as moviesController from './BL/movies';
 
@@ -23,12 +24,12 @@ import hasTransactions from './BL/middleware/hasTransactions';
 
 connectDB();
 
-const MongoDBStore = connectMongoDBSession(session)
+const MongoDBStore = connectMongoDBSession(session);
 
 const store = new MongoDBStore({
 	uri: process.env.DB_URI,
-	collection: 'sessions'
-})
+	collection: 'sessions',
+});
 const isProd = process.env.NODE_ENV === 'production';
 let webpackDevMiddleware;
 let webpackHotMiddleware;
@@ -74,7 +75,7 @@ const sessionMW = (function (app) {
 			secret: 'keyboard cat',
 			resave: false,
 			saveUninitialized: false,
-			store
+			store,
 		})
 	);
 })(app);
@@ -111,53 +112,45 @@ const generalMW = (function (app) {
 	app.use(express.static(path.join(__dirname, '../fonts')));
 })(app);
 
-// const userMW = (function (app) {
-// 	app.use(async (req, res, next) => {
-// 		if (req.session.user) {
-// 			try {
-// 				let user = await User.findById(req.session.user.id);
-// 				if (user) {
-// 					req.user = user;
-// 				}
-// 			} catch (err) {
-// 				throw new Error(err);
-// 			}
-// 		}
-// 		next();
-// 	});
-// })(app);
+const userMW = (function (app) {
+	app.use(async (req, res, next) => {
+		if (req.session.user) {
+			try {
+				let user = await User.findById(req.session.user._id);
+				if (user) {
+					req.user = user;
+				}
+			} catch (err) {
+				console.log(err);
+				next(err);
+			}
+		}
+		next();
+	});
+})(app);
+
+/**
+ * locals MW
+ */
+
+app.use(setLocals);
 
 /**Menu Routes */
-app.use('/', menuRoutes);
-
+app.get('/', menuRoutes);
 /**Movies Routes */
-app.get('/search', isLoggedIn, hasTransactions, moviesController.getMovies);
-
-// app.get(
-// 	'/create',
-// 	isLoggedIn,
-// 	hasTransactions,
-// 	moviesController.getCreateMovie
-// );
 
 app.use('/movies', movieRouter);
-
 /**Members Routes */
 app.use('/members', memberRouter);
-
 /**Subscriptions Routes */
 app.use('/subscriptions', subscriptionRouter);
-
-app.post('/create', isLoggedIn, hasTransactions, moviesController.createMovie);
-
-app.get('/login', authController.getLogin);
-app.get('/logout', authController.getLogout);
-
 /**User Routes */
-app.use('/users', /*isAdmin, hasTransactions,*/ userRouter);
+app.use('/users', /*isAdmin,*/ userRouter);
 
 /**Auth Routes */
 app.use('/auth', authRouter);
+app.get('/login', authController.getLogin);
+app.get('/logout', authController.getLogout);
 
 app.use(function notFound(req, res) {
 	res.render('error', { message: "That page doesn't exist" });
@@ -168,7 +161,6 @@ app.use(function errorHandler(err, req, res, next) {
 	if (res.headersSent) {
 		return next(err);
 	}
-	res.status(500);
 	res.render('error', { message: 'Something went wrong' });
 });
 

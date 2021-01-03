@@ -3,9 +3,7 @@ import { validationResult } from 'express-validator/check';
 import * as User from '../models/User';
 import bcrypt from 'bcryptjs';
 
-
 export async function getLogin(req, res, next) {
-
 	res.render('login', {
 		errorMessage: req.flash('error'),
 		oldInput: {
@@ -20,31 +18,17 @@ export async function postLogin(req, res, next) {
 	const errors = validationResult(req);
 	const { username, password } = req.body;
 
-	// if (errors.isEmpty()) await signInUser();
-	// else cancelSignIn();
-	// signInUser();
-	logInUser()
-	
-	async function signInUser() {
-		req.session.user = req.user;
-		var today = new Date(Date.now()).toDateString();
-		var user = { ...req.session.user };
+	if (errors.isEmpty()) signInUser();
+	else cancelSignIn();
 
-		if (req.session.user.loggedInAt != today) {
-			user.loggedInAt = today;
-			user.transactionsCounter = 0;
-			await User.updateUser(user);
-		}
-		if (user.transactionsCounter >= user.transactions) {
-			req.flash('error', `Your have exceeded your daily transactions`);
-		}
+	// logInUser()
+
+	function signInUser() {
+		req.session.user = req.user;
+
 		res.redirect('/');
 	}
 
-	async function logInUser(){
-		req.session.isLoggedIn = true;
-		res.redirect('/')
-	}
 	function cancelSignIn() {
 		res.status(422).render('login', {
 			errorMessage: errors.array()[0].msg,
@@ -98,9 +82,14 @@ export function isAuth(req, res, next) {
 export var validateUsername = body('username') //validate username
 	.custom(async (value, { req }) => {
 		let { username } = req.body;
-		let user = await User.findOne({
-			username,
-		});
+		let user;
+		try {
+			user = await User.findByUsername(username);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+
 		if (!user) {
 			throw new Error('Incorrect username');
 		} else {

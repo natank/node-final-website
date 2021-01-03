@@ -1,4 +1,5 @@
 import * as User from '../models/User';
+import { params, validationResult } from 'express-validator';
 
 import bcrypt from 'bcryptjs';
 
@@ -10,31 +11,31 @@ export async function findUser(id) {
 export async function getUsers(req, res, next) {
 	var users = await User.getUsers();
 	if (!users) users = [];
-	res.render('./users', { users, authUser: req.user.id });
+	res.render('./users', { users });
 }
 
-export async function getUser(req, res, next) {
-	var userId = req.params.id;
-	try {
-		var user = await User.findById(userId);
-		res.status(200).json(user);
-	} catch (err) {
-		res.status(500).end();
-		throw err;
-	}
+export async function getActivateUser(req, res) {
+	res.render('./activateAccount', {
+		errorMessage: req.flash('error'),
+		oldInput: {
+			email: '',
+			password: '',
+		},
+		validationErrors: [],
+	});
 }
 
-export function getCreateUser(req, res, next) {
+export function getCreateUser(req, res) {
 	res.render('userForm');
 }
 
-export async function getUpdateUser(req, res, next) {
+export async function getUpdateUser(req, res) {
 	var userId = req.params.id;
 	var user = await User.findById(userId);
-	res.render('userForm', { user });
+	res.render('userForm', { editedUser: user });
 }
 
-export async function deleteUser(req, res, next) {
+export async function deleteUser(req, res) {
 	var { id } = req.params;
 	req.user = { id: 1 };
 	//Prevent deleting the current user
@@ -51,27 +52,19 @@ export async function deleteUser(req, res, next) {
 	}
 }
 
-export async function postCreateUser(req, res, next) {
-	var {
-		username,
-		firstName,
-		lastName,
-		sessionTimeOut,
-		permissions,
-		password,
-		isAdmin,
-	} = req.body;
-	let hashedPassword = await bcrypt.hash(password, 12);
+export async function postCreateUser(req, res) {
+	var keys = [
+		'username',
+		'firstName',
+		'lastName',
+		'sessionTimeOut',
+		'permissions',
+		'isAdmin',
+	];
+	var userSettings = {};
+	keys.forEach(key => (userSettings[key] = req.body[key]));
 
-	await User.createUser({
-		username,
-		firstName,
-		lastName,
-		sessionTimeOut,
-		permissions,
-		password: hashedPassword,
-		isAdmin,
-	});
+	await User.createUser(userSettings);
 
 	res.status(200).end();
 }
@@ -83,15 +76,28 @@ export async function postUpdateUser(req, res, next) {
 	try {
 		await User.updateUser({
 			id,
-			username,
 			firstName,
 			lastName,
 			sessionTimeOut,
 			permissions,
 		});
 	} catch (err) {
-		res.status(500).end();
+		next(err);
 		throw err;
 	}
-	res.status(200).end();
+	res.redirect('/');
+}
+
+export async function postActivateAccount(req, res) {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		var ers = errors.array();
+		res.status(200).json(ers);
+	} else {
+		var { username, password } = req.body;
+		let hashedPassword = await bcrypt.hash(password, 12);
+		var userId = req.userToActivate.id;
+		await User.updateUserPassword(userId, hashedPassword);
+		res.status(200).end();
+	}
 }

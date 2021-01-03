@@ -7,16 +7,17 @@ block content
         .col-12
             a.btn.btn-primary(href="/users/create") Create
     .row.mb-4
-        each user in users
+        each currUser in users
             .col-sm-12.col-md-4
                 .card.mb-4
                     .card-body
-                        .card-title= user.username
-                        p.card-text Transactions: #{user.transactions}
-                        p.card-text Created: #{user.createdDate}
+                        .card-title= `${currUser.firstName} ${currUser.lastName}`
+                        p.card-text Created: #{currUser.createdDate}
+                        p.card-text SessionTimeOut: #{currUser.sessionTimeOut} min
+                        p.card-text.card-text--permissions Permissions: #{currUser.permissions.toString()}
                         .row.g-2
                             .col-3
-                                a(href=`/users/edit/${user.id}`).btn.btn-primary Edit
+                                a(href=`/users/${currUser.id}`).btn.btn-primary Edit
                             .col-3
-                                a(href=`/users/delete/${user.id}` class= (authUser == user.id ? "disabled": "fffff")).btn.btn-primary Delete
-    
+                                button#deleteUser(userId = currUser.id  class= (authUser == currUser.id ? "disabled": "fffff")).btn.btn-primary 
+                                  | Delete

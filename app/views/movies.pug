@@ -4,59 +4,20 @@ block content
     p.hero__text.m-0 
       | View and Filter Movies
 
-  form(action="/search").mb-5.border.p-5
-    .row.gx-3.justify-content-center.mb-4
-      .col-sm-12.col-md-4
-        label(for="name", class="form-label") Name
-        input(type="text" name="name").form-control#name
-      .col-sm-12.col-md-4
-        label(for="language", class="form-label") Language
-        input(type="text" name="language").form-control#language
-      .col-sm-12.col-md-4
-        label(for='genres', class="form-label") Genres
-        select(name="genre").custom-select#genres.form-control
-          option(selected disabled hidden value="") Choose genre...
-          each genre in genres
-            option(value=genre)= genre
-    .row.justify-content-center
-      .col-3.d-flex.justify-content-center
-        button(type="submit").btn.btn-secondary.m-auto Submit
-  h2.text-center.my-4 New Movies
-
-  if movies.newMovies.length < 1
-    p No new movies, try another filter 
-  else
-    table.table.table-striped(style="table-layout: fixed; width: 100%")
-      thead
-        tr
-          th(scope="col" style="width: 30%") Movie
-          th(scope="col" style="width: 70%") Related Movies
-        tbody
-          each movie in movies.newMovies 
-            tr
-              td
-                a(href= `/movies/${movie.id}`)= movie.name
-              td
-                each relatedMovie in movie.relatedMovies
-                  a(href=`/movies/${relatedMovie.id}`)= `${relatedMovie.name},   `
-
+  include includes/movies-nav
   h2.text-center.my-4 Movies
-  if movies.apiMovies.length < 1
+  if movies.length < 1
     p No movies, try another filter 
   else
     table.table.table-striped(style="table-layout: fixed; width: 100%")
       thead
         tr
           th(scope="col" style="width: 30%") Movie
-          th(scope="col" style="width: 70%") Related Movies
         tbody
-          each movie in movies.apiMovies 
+          each movie in movies
             tr
               td
                 a(href= `/movies/${movie.id}`)= movie.name
-              td
-                each relatedMovie in movie.relatedMovies
-                  a(href=`/movies/${relatedMovie.id}`)= `${relatedMovie.name},   `
   include ./includes/footer.pug 
 
 

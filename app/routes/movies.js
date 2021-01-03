@@ -5,7 +5,7 @@ import * as moviesController from '../BL/movies';
 
 const router = express.Router();
 
-router.get('/', moviesController.getMovies);
+router.get('/', moviesController.findMovies);
 
 router.get('/:id', moviesController.getMovie);
 router.post('/', moviesController.createMovie);

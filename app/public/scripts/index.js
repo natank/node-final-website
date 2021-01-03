@@ -2,78 +2,55 @@ import axios from 'axios';
 import 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', event => {
-	let select = document.querySelector('.submit-on-toggle');
-	select &&
-		select.addEventListener('change', event => {
-			let form = event.target.closest('form');
-			form.submit();
-		});
-
-	document
-		.querySelectorAll('.bi-heart')
-		.forEach(elem => elem.addEventListener('click', product.wishlistProduct));
-	document
-		.querySelectorAll('.bi-heart-fill')
-		.forEach(elem =>
-			elem.addEventListener('click', product.un_wishlistProduct)
-		);
+	let deleteBtn = document.querySelector('#deleteUser');
+	let updateBtn = document.querySelector('#updateUser');
+	deleteBtn && deleteBtn.addEventListener('click', deleteUser);
+	updateBtn && updateBtn.addEventListener('click', updateUser);
 });
 
-let product = (function () {
-	return {
-		wishlistProduct: async function () {
-			const card = event.target.closest('.card');
-			const heart = card.querySelector('.bi-heart');
-			const id = card.getAttribute('data-id');
-			const heartFill = card.querySelector('.bi-heart-fill');
-			const csrf = card.getAttribute('data-csrf');
+async function deleteUser(event) {
+	var userId = event.target.attributes.userid.value;
 
-			let response = await axios({
-				method: 'post',
-				url: `/shop/wishlist`,
-				data: {
-					prodId: id,
-					_csrf: csrf,
-				},
-			});
-			switch (response.status) {
-				case 200:
-					heart.style.visibility = 'hidden';
-					heartFill.style.visibility = 'visible';
-					break;
-				case 404:
-					break;
-				default:
-					break;
-			}
-			//alert(`product ${id} wishlisted`)
-		},
-		un_wishlistProduct: async function () {
-			const card = event.target.closest('.card');
-			const heartFill = card.querySelector('.bi-heart-fill');
-			const heart = card.querySelector('.bi-heart');
-			const id = card.getAttribute('data-id');
-			const csrf = card.getAttribute('data-csrf');
+	await axios.delete(`/users/${userId}`);
+}
 
-			let response = await axios({
-				method: 'delete',
-				url: `/shop/wishlist`,
-				data: {
-					prodId: id,
-					_csrf: csrf,
-				},
-			});
-			switch (response.status) {
-				case 200:
-					heartFill.style.visibility = 'hidden';
-					heart.style.visibility = 'visible';
-				case 404:
-					break;
-				default:
-					break;
-			}
-		},
+async function updateUser(event) {
+	var userId = document.querySelector('#userid');
+	userId = userId.value;
+	var username = document.querySelector('#username').value;
+	var firstName = document.querySelector('#firstName').value;
+	var lastName = document.querySelector('#lastName').value;
+	var sessionTimeOut = document.querySelector('#sessionTimeOut').value;
+	var permissions = document.querySelectorAll('input[name="permissions"]');
+	try {
+		var acc = [];
+		permissions = permissions.forEach(permission => {
+			permission.checked ? acc.push(permission.id) : null;
+		});
+		permissions = acc;
+	} catch (error) {
+		console.log(error);
+	}
+
+	axios.put(`/users/${userId}`, {
+		username,
+		firstName,
+		lastName,
+		sessionTimeOut,
+		permissions,
+	});
+}
+
+function permissionToString(permission) {
+	var permissions = {
+		viewMovies: 'View Movies',
+		createMovies: 'Create Movies',
+		deleteMovies: 'Delete Movies',
+		updateMovies: 'Update Movies',
+		viewSubscriptions: 'View Subscriptions',
+		createSubscriptions: 'Create Subscriptions',
+		deleteSubscriptions: 'Delete Subscriptions',
+		updateSubscriptions: 'Update Subscriptions',
 	};
-})();
-
-export const wishlistProduct = product.wishlistProduct;
+	return permissions[permission];
+}

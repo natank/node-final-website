@@ -1,1 +1,6 @@
 // Class customizations
+.card-text {
+	&--permissions {
+		height: 6rem;
+	}
+}

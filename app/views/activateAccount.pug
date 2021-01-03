@@ -3,7 +3,7 @@ block content
   main.d-flex.flex-column.align-items-center.flex-grow-1
     if(errorMessage.length > 0)
       div.alert.alert-danger.mt-3 #{errorMessage}
-    form.auth__form(action="/auth/login" method="POST").d-flex.flex-column.justify-content-center.flex-grow-1
+    form.auth__form(action="/users/activate" method="POST").d-flex.flex-column.justify-content-center.flex-grow-1
       input(type="hidden" name="_csrf" value=csrfToken)
       div.form-group
         label(for="username") Username
@@ -13,5 +13,5 @@ block content
         label(for="password") Password
         input.form-control(class= (validationErrors.find(e=>e.param==='password') ? 'invalid':'') type="password" name="password" value=oldInput.password)
 
-      button.btn.btn-primary(type="submit") Login
-      a(href="/users/activate") Acvitae Account
+      button.btn.btn-primary(type="submit") Activate
+      
