@@ -15,10 +15,11 @@ export async function findMovies(req, res, next) {
 export async function getMovie(req, res, next) {
 	try {
 		const movieId = req.params.id;
-		var movie = await Subscriptions.getMovie(movieId);
-		res.status(200).json(movie);
+		var movie = await Movie.findById(movieId);
+		res.render('./movieForm', {movie})
 	} catch (err) {
-		res.status(500).end();
+		req.flash("error", "movie not found")
+		res.redirect('/movies');
 		throw err;
 	}
 }

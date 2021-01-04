@@ -2,25 +2,25 @@ extends ./templates/container.pug
 block content
   section.hero
       p.hero__text.m-0 
-        | Create Movie
-  section.container.w-md-50.form-group
+        | #{movie ? `Edit Movie: ${movie.name}`: "Create Movie"}
+  
+  include includes/movies-nav
+  section.container.w-md-50
     form.row.g-3(action="/create" method="POST")
+      .form-group
+        label(for="name") Name
+        input(type="text" name="name" value=movie ? movie.name: "").form-control#name
+      .form-group
+        label(for="genres") Genres
+        input(type="text" name="genres" value=movie ? movie.genres.toString(): '').form-control#genres
+      .form-group
+        label(for="image") Image URL
+        input(type="text" name="image" value=movie ? movie.image: '').form-control#image
+      .form-group
+        label(for="image") Premiered
+        input(type="text" name="premiered" value=movie ? movie.premiered:'').form-control#premiered
       .col-12
-        label(for="name", class="form-label") Name
-        input(type="text" name="name").form-control#name
-      .col-12
-        label(for="language", class="form-label") Language
-        input(type="text" name="language").form-control#language
-      .col-12
-        .input-group.mb-3
-          .input-group-prepend
-            label.input-group-text(for='genres') Genres
-          select(multiple name="genres").custom-select#genres.form-control
-            option(disabled selected) Choose genre...
-            each genre in genres
-              option(value= genre)= genre
-      .col-12
-        button(type="submit").btn.btn-secondary Create
+        button(data-movie-op= movie ? "update":"create" data-movie-id=movie ? movie._id : '').btn.btn-secondary #{movie ? "Update" : "Create"}
 
 
   include ./includes/footer.pug

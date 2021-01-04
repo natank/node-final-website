@@ -2,10 +2,17 @@ import axios from 'axios';
 import 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', event => {
-	let deleteBtn = document.querySelector('#deleteUser');
-	let updateBtn = document.querySelector('#updateUser');
-	deleteBtn && deleteBtn.addEventListener('click', deleteUser);
-	updateBtn && updateBtn.addEventListener('click', updateUser);
+	let deleteUserBtn = document.querySelector('#deleteUser');
+	let updateUserBtn = document.querySelector('#updateUser');
+	let deleteMovieBtns = document.querySelectorAll('[data-movie-op="delete"]');
+	let editMovieBtns = document.querySelectorAll('[data-movie-op="edit"]');
+	let updateMovieBtn = document.querySelector('[data-movie-op="update"]')
+
+	deleteUserBtn && deleteUserBtn.addEventListener('click', deleteUser);
+	updateUserBtn && updateUserBtn.addEventListener('click', updateUser);
+	deleteMovieBtns && deleteMovieBtns.forEach(btn=>btn.addEventListener('click', deleteMovie));
+	editMovieBtns && editMovieBtns.forEach(btn=>btn.addEventListener('click', editMovie));
+	updateMovieBtn && updateMovieBtn.addEventListener('click', updateMovie)
 });
 
 async function deleteUser(event) {
@@ -40,6 +47,33 @@ async function updateUser(event) {
 		permissions,
 	});
 }
+
+
+/**
+ * Movie Event listeneres
+ */
+async function editMovie(event){
+	const movieId = event.target.attributes["data-movie-id"].value
+	
+	await axios.get(`/movies/${movieId}`)
+
+}
+
+async function deleteMovie(event){
+	event.preventDefault();
+	const movieId = event.target.attributes["data-movie-id"].value
+}
+
+async function updateMovie(event){
+	
+	const movieId = event.target.attributes['data-movie-id'].value
+	const movieName = document.querySelector(["name='name'"]).value
+	const movieGenres = document.querySelector(["name='genres'"]).value
+	const movieImage = document.querySelector(["name='image'"]).value
+	const moviePremiered = document.querySelector(["name='premiered'"]).value
+	await axios.put('/movies', {_id: movieId, name: movieName, genres: movieGenres, premiered: moviePremiered, image: movieImage})
+}
+
 
 function permissionToString(permission) {
 	var permissions = {

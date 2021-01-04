@@ -22,8 +22,8 @@ block content
                   img(src=movie.image style="height: 7rem").d-block
                 .col.col-9.border
                   h6.card-subtitle.mb-2 Subscriptions Watched
-              a(href="#").btn.btn-primary.mr-2 Edit
-              a(href="#").btn.btn-primary Delete
+              a(href=`movies/${movie._id}` data-movie-id=movie._id data-movie-op="edit")#editMovie.btn.btn-primary.mr-2 Edit
+              button(data-movie-id=movie._id data-movie-op="delete")#deleteMovie.btn.btn-primary Delete
   include ./includes/footer.pug 
 
 
