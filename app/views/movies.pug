@@ -9,15 +9,21 @@ block content
   if movies.length < 1
     p No movies, try another filter 
   else
-    table.table.table-striped(style="table-layout: fixed; width: 100%")
-      thead
-        tr
-          th(scope="col" style="width: 30%") Movie
-        tbody
-          each movie in movies
-            tr
-              td
-                a(href= `/movies/${movie.id}`)= movie.name
+    .row
+      each movie in movies
+        .col.col-6.d-flex.justify-content-center
+          .card(style="width: 25rem").mb-5
+            .card-body
+              h5.card-title #{`${movie.name}, ${movie.premiered && movie.premiered.split('-')[0]}` }
+              h6.card-subtitle.mb-2.text-muted #{movie.genres}
+              
+              .row.mb-2
+                .col.col-3
+                  img(src=movie.image style="height: 7rem").d-block
+                .col.col-9.border
+                  h6.card-subtitle.mb-2 Subscriptions Watched
+              a(href="#").btn.btn-primary.mr-2 Edit
+              a(href="#").btn.btn-primary Delete
   include ./includes/footer.pug 
 
 
