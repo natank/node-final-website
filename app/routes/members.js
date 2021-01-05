@@ -6,10 +6,11 @@ import * as membersController from '../BL/members';
 const router = express.Router();
 
 router.get('/', membersController.getMembers);
+router.get('/create', membersController.getMember)
 
 router.get('/:id', membersController.getMember);
-router.post('/', membersController.createMember);
-router.delete('/:id', membersController.deleteMember);
-router.put('/:id', membersController.updateMember);
+router.post('/', membersController.postCreateMember);
+router.get('/delete/:id', membersController.getDeleteMember);
+router.post('/update/:id', membersController.postUpdateMember);
 
 export default router;

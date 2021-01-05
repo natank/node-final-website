@@ -67,11 +67,11 @@ async function deleteMovie(event){
 async function updateMovie(event){
 	
 	const movieId = event.target.attributes['data-movie-id'].value
-	const movieName = document.querySelector(["name='name'"]).value
-	const movieGenres = document.querySelector(["name='genres'"]).value
-	const movieImage = document.querySelector(["name='image'"]).value
-	const moviePremiered = document.querySelector(["name='premiered'"]).value
-	await axios.put('/movies', {_id: movieId, name: movieName, genres: movieGenres, premiered: moviePremiered, image: movieImage})
+	const movieName = document.querySelector("[name='name']").value
+	const movieGenres = document.querySelector("[name='genres']").value
+	const movieImage = document.querySelector("[name='image']").value
+	const moviePremiered = document.querySelector("[name='premiered']").value
+	await axios.put('/movies', {id: movieId, name: movieName, genres: movieGenres, premiered: moviePremiered, image: movieImage})
 }
 
 

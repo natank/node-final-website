@@ -1,0 +1,24 @@
+extends ./templates/container.pug
+block content
+  section.hero
+    p.hero__text.m-0 
+      | #{member ? `Edit Member: ${member.name}`: "Create Member"}
+  
+  include includes/members-nav
+  section.container.w-md-50
+    form.row.g-3(action=member ? `/members/update/${member._id}`: '/members', method="POST")
+      .form-group
+        label(for="name") Name
+        input(type="text" name="name" value=member ? member.name: "").form-control#name
+      .form-group
+        label(for="email") Email
+        input(type="text" name="email" value=member ? member.email : '').form-control#email
+      .form-group
+        label(for="city") City
+        input(type="text" name="city" value=member ? member.city : '').form-control#city
+      .col-12
+        button(type="submit").btn.btn-primary.mr-2 #{member ? "Update" : "Create"}
+        a.btn.btn-secondary(href="/members") Cancel
+
+
+  include ./includes/footer.pug

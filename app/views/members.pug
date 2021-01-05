@@ -1,0 +1,28 @@
+extends ./templates/container.pug
+block content
+  section.hero
+    p.hero__text.m-0 
+      | View Members
+
+  include includes/members-nav
+  h2.text-center.my-4 Subscriptions
+  if members.length < 1
+    p No members 
+  else
+    .row
+      each member in members
+        .col.col-6.d-flex.justify-content-center
+          .card(style="width: 25rem").mb-5
+            .card-body
+              h5.card-title.mb-2 #{member.name}
+              p Email: #{member.email}
+              p City: #{member.city}
+
+              a(href=`members/${member._id}`).btn.btn-primary.mr-2 Edit
+              a(href=`members/delete/${member._id}`).btn.btn-primary Delete
+
+              div
+                .card-title Movies Watched
+                
+
+  include ./includes/footer.pug

@@ -1,10 +1,11 @@
-import * as Subscriptions from '../models/Subscriptions';
+import { render } from 'pug';
+import * as Member from '../models/Members';
 
 export async function getMembers(req, res, next) {
 	var { name, genres } = req.query;
 	try {
-		var members = await Subscriptions.getMembers({ name, genres });
-		res.status(200).json(members);
+		var members = await Member.getMembers({ name, genres });
+		res.render('./members', {members})
 	} catch (err) {
 		res.status(500).end();
 		throw err;
@@ -14,20 +15,27 @@ export async function getMembers(req, res, next) {
 export async function getMember(req, res, next) {
 	try {
 		const memberId = req.params.id;
-		var member = await Subscriptions.getMember(memberId);
-		res.status(200).json(member);
+		var member = undefined;
+		if(memberId){
+			try {
+				member = await Member.getMember(memberId);
+			} catch (error) {
+				if(error) console.log(error)
+			}
+		}
+		res.render('./memberForm', {member})
 	} catch (err) {
-		res.status(500).end();
+		next(err)
 		throw err;
 	}
 }
 
-export async function createMember(req, res, next) {
+export async function postCreateMember(req, res, next) {
 	const { name, email, city } = req.body;
 
 	try {
-		var member = await Subscriptions.createMember({ name, email, city });
-		res.status(200).json(member);
+		var member = await Member.createMember({ name, email, city });
+		res.redirect('/members')
 	} catch (err) {
 		res.status(500).end();
 		console.log(err);
@@ -35,24 +43,24 @@ export async function createMember(req, res, next) {
 	}
 }
 
-export async function deleteMember(req, res, next) {
+export async function getDeleteMember(req, res, next) {
 	var { id } = req.params;
 	try {
-		await Subscriptions.deleteMember(id);
-		res.status(200).end();
+		await Member.deleteMember(id);
+		res.redirect('/members')
 	} catch (err) {
 		console.log(err);
 		res.status(500).end();
 	}
 }
 
-export async function updateMember(req, res, next) {
+export async function postUpdateMember(req, res, next) {
 	var { name, email, city } = req.body;
 	var { id } = req.params;
 	console.log(`id = ${id}`);
 	try {
-		var member = await Subscriptions.updateMember({ id, name, email, city });
-		res.status(200).end();
+		var member = await Member.updateMember({ id, name, email, city });
+		res.redirect('/members')
 	} catch (err) {
 		res.status(500).end();
 		console.log(err);
