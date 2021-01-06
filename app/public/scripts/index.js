@@ -1,18 +1,27 @@
 import axios from 'axios';
-import 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', event => {
 	let deleteUserBtn = document.querySelector('#deleteUser');
 	let updateUserBtn = document.querySelector('#updateUser');
 	let deleteMovieBtns = document.querySelectorAll('[data-movie-op="delete"]');
 	let editMovieBtns = document.querySelectorAll('[data-movie-op="edit"]');
-	let updateMovieBtn = document.querySelector('[data-movie-op="update"]')
+	let btnSubscriptionFormShow = document.querySelectorAll(
+		'[role="showSubscriptionForm"]'
+	);
+	let updateMovieBtn = document.querySelector('[data-movie-op="update"]');
+
+	btnSubscriptionFormShow &&
+		btnSubscriptionFormShow.forEach(btn =>
+			btn.addEventListener('click', openSubscriptionForm)
+		);
 
 	deleteUserBtn && deleteUserBtn.addEventListener('click', deleteUser);
 	updateUserBtn && updateUserBtn.addEventListener('click', updateUser);
-	deleteMovieBtns && deleteMovieBtns.forEach(btn=>btn.addEventListener('click', deleteMovie));
-	editMovieBtns && editMovieBtns.forEach(btn=>btn.addEventListener('click', editMovie));
-	updateMovieBtn && updateMovieBtn.addEventListener('click', updateMovie)
+	deleteMovieBtns &&
+		deleteMovieBtns.forEach(btn => btn.addEventListener('click', deleteMovie));
+	editMovieBtns &&
+		editMovieBtns.forEach(btn => btn.addEventListener('click', editMovie));
+	updateMovieBtn && updateMovieBtn.addEventListener('click', updateMovie);
 });
 
 async function deleteUser(event) {
@@ -48,32 +57,34 @@ async function updateUser(event) {
 	});
 }
 
-
 /**
  * Movie Event listeneres
  */
-async function editMovie(event){
-	const movieId = event.target.attributes["data-movie-id"].value
-	
-	await axios.get(`/movies/${movieId}`)
+async function editMovie(event) {
+	const movieId = event.target.attributes['data-movie-id'].value;
 
+	await axios.get(`/movies/${movieId}`);
 }
 
-async function deleteMovie(event){
+async function deleteMovie(event) {
 	event.preventDefault();
-	const movieId = event.target.attributes["data-movie-id"].value
+	const movieId = event.target.attributes['data-movie-id'].value;
 }
 
-async function updateMovie(event){
-	
-	const movieId = event.target.attributes['data-movie-id'].value
-	const movieName = document.querySelector("[name='name']").value
-	const movieGenres = document.querySelector("[name='genres']").value
-	const movieImage = document.querySelector("[name='image']").value
-	const moviePremiered = document.querySelector("[name='premiered']").value
-	await axios.put('/movies', {id: movieId, name: movieName, genres: movieGenres, premiered: moviePremiered, image: movieImage})
+async function updateMovie(event) {
+	const movieId = event.target.attributes['data-movie-id'].value;
+	const movieName = document.querySelector("[name='name']").value;
+	const movieGenres = document.querySelector("[name='genres']").value;
+	const movieImage = document.querySelector("[name='image']").value;
+	const moviePremiered = document.querySelector("[name='premiered']").value;
+	await axios.put('/movies', {
+		id: movieId,
+		name: movieName,
+		genres: movieGenres,
+		premiered: moviePremiered,
+		image: movieImage,
+	});
 }
-
 
 function permissionToString(permission) {
 	var permissions = {
@@ -87,4 +98,12 @@ function permissionToString(permission) {
 		updateSubscriptions: 'Update Subscriptions',
 	};
 	return permissions[permission];
+}
+
+function openSubscriptionForm(event) {
+	var btnOpenForm = event.target;
+	var memberId = btnOpenForm.attributes['data-memberId'].value;
+	var subscriptionForm = btnOpenForm.nextElementSibling;
+	subscriptionForm.style.display =
+		subscriptionForm.style.display == 'none' ? 'block' : 'none';
 }

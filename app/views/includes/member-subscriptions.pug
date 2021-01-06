@@ -1,0 +1,4 @@
+.list-group
+  each movie in member.subscriptions
+    a.list-group-item.list-group-item-action(href=`/movies/${movie.movie._id}`)
+      | #{`${movie.movie.name}, ${movie.date}` }

@@ -1,14 +1,12 @@
-import subscriptionsApi from '../API/subscriptions'
-
+import subscriptionsApi from '../API/subscriptions';
 
 export async function getMembers({ name, genres }) {
 	try {
 		var response = await subscriptionsApi.get('/members', {
 			data: { name, genres },
 		});
-		
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 	}
 	return response.data;
 }
