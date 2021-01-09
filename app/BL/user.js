@@ -11,6 +11,8 @@ export async function findUser(id) {
 export async function getUsers(req, res, next) {
 	var users = await User.getUsers();
 	if (!users) users = [];
+	users.forEach(permissionsToString);
+
 	res.render('./users', { users });
 }
 
@@ -32,7 +34,14 @@ export function getCreateUser(req, res) {
 export async function getUpdateUser(req, res) {
 	var userId = req.params.id;
 	var user = await User.findById(userId);
-	res.render('userForm', { editedUser: user });
+
+	if (user) {
+		permissionsToString(user);
+		res.render('userForm', { editedUser: user });
+	} else {
+		req.flash('error', 'user not found');
+		res.render('/');
+	}
 }
 
 export async function deleteUser(req, res) {
@@ -66,7 +75,7 @@ export async function postCreateUser(req, res) {
 
 	await User.createUser(userSettings);
 
-	res.status(200).end();
+	res.redirect('/');
 }
 
 export async function postUpdateUser(req, res, next) {
@@ -100,4 +109,45 @@ export async function postActivateAccount(req, res) {
 		await User.updateUserPassword(userId, hashedPassword);
 		res.status(200).end();
 	}
+}
+
+function permissionsToString(user) {
+	var permissions = [];
+	for (const [key, value] of Object.entries(user.permissions.movies)) {
+		switch (key) {
+			case 'view':
+				if (value == true) permissions.push('viewMovies');
+				break;
+			case 'create':
+				if (value == true) permissions.push('createMovies');
+				break;
+			case 'delete':
+				if (value == true) permissions.push('deleteMovies');
+				break;
+			case 'update':
+				if (value == true) permissions.push('updateMovies');
+				break;
+			default:
+				break;
+		}
+	}
+	for (const [key, value] of Object.entries(user.permissions.subscriptions)) {
+		switch (key) {
+			case 'view':
+				if (value == true) permissions.push('viewSubscriptions');
+				break;
+			case 'create':
+				if (value == true) permissions.push('createSubscriptions');
+				break;
+			case 'delete':
+				if (value == true) permissions.push('deleteSubscriptions');
+				break;
+			case 'update':
+				if (value == true) permissions.push('updateSubscriptions');
+				break;
+			default:
+				break;
+		}
+	}
+	user.permissions = permissions;
 }

@@ -1,1 +1,10 @@
-[{"userId":"5ff1132c33d35d1984f8de05","permissions":["viewMovies","deleteMovies","viewSubscriptions","isAdmin"]}]
+[
+	{
+		"userId": "5ff9eefd1293e31e54f3814d",
+		"permissions": {
+			"movies": { "view": true, "create": false, "delete": true },
+			"subscriptions": { "view": true, "create": true, "delete": false },
+			"isAdmin": true
+		}
+	}
+]

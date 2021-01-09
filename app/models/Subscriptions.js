@@ -2,12 +2,13 @@ import subscriptionsApi from '../API/subscriptions';
 
 export async function getSubscriptions({ memberId, movieId }) {
 	var response = await subscriptionsApi.get('/subscriptions', {
-		data: {
+		params: {
 			memberId,
 			movieId,
 		},
 	});
-	return response.data;
+	var subscriptions = response.data;
+	return subscriptions;
 }
 
 export async function deleteSubscriptions(memberId) {
@@ -30,4 +31,3 @@ export async function createSubscription({ memberId, movieId, date }) {
 		throw err;
 	}
 }
-

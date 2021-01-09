@@ -1,0 +1,7 @@
+.list-group.mb-2
+  if (movie.subscriptions && movie.subscriptions.length > 0)
+    each subscription in movie.subscriptions
+      a.list-group-item.list-group-item-action(href=`/movies/${subscription.member.id}`)
+        | #{`${subscription.member.name}, ${subscription.date}` }
+  else
+    p No subscriptions yet

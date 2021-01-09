@@ -12,17 +12,7 @@ block content
     .row
       each movie in movies
         .col.col-6.d-flex.justify-content-center
-          .card(style="width: 25rem").mb-5
-            .card-body
-              h5.card-title #{`${movie.name}, ${movie.premiered && movie.premiered.split('-')[0]}` }
-              h6.card-subtitle.mb-2.text-muted #{movie.genres}
-              
-              .row.mb-2
-                .col.col-3
-                  img(src=movie.image style="height: 7rem").d-block
-                .col.col-9.border
-                  h6.card-subtitle.mb-2 Subscriptions Watched
-              a(href=`movies/${movie._id}`)#editMovie.btn.btn-primary.mr-2 Edit
-              a(href=`movies/delete/${movie._id}`)#deleteMovie.btn.btn-primary Delete
+          include ./includes/movie-card
+          
 
   include ./includes/footer.pug

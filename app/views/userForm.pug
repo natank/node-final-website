@@ -5,7 +5,7 @@ block content
         | #{editedUser ? "Update" : "Create"} User
   section.container.w-md-50.form-group
     form.row.g-3(action= "/users" method=(editedUser ? "PUT" : "POST"))
-      input(type="hidden" id="userid" value=editedUser._id)
+      input(type="hidden" id="userid" value= editedUser ? editedUser._id: null)
       .col-12
         label(for="username", class="form-label") User Name
         input(type="text" name="username" disabled= !!editedUser value= (editedUser ? `${editedUser.username}`:'')).form-control#username

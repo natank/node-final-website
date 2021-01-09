@@ -3,12 +3,22 @@ import axios from 'axios';
 document.addEventListener('DOMContentLoaded', event => {
 	let deleteUserBtn = document.querySelector('#deleteUser');
 	let updateUserBtn = document.querySelector('#updateUser');
-	let deleteMovieBtns = document.querySelectorAll('[data-movie-op="delete"]');
-	let editMovieBtns = document.querySelectorAll('[data-movie-op="edit"]');
 	let btnSubscriptionFormShow = document.querySelectorAll(
 		'[role="showSubscriptionForm"]'
 	);
-	let updateMovieBtn = document.querySelector('[data-movie-op="update"]');
+	let btnSubscription = document.querySelectorAll(
+		'[data-role="createSubscription"]'
+	);
+	let btnCancelSubscription = document.querySelectorAll(
+		'[data-role="cancelSubscription"]'
+	);
+
+	btnSubscription.forEach(btn =>
+		btn.addEventListener('click', createSubscription)
+	);
+	btnCancelSubscription.forEach(btn =>
+		btn.addEventListener('click', cancelSubscription)
+	);
 
 	btnSubscriptionFormShow &&
 		btnSubscriptionFormShow.forEach(btn =>
@@ -17,11 +27,6 @@ document.addEventListener('DOMContentLoaded', event => {
 
 	deleteUserBtn && deleteUserBtn.addEventListener('click', deleteUser);
 	updateUserBtn && updateUserBtn.addEventListener('click', updateUser);
-	deleteMovieBtns &&
-		deleteMovieBtns.forEach(btn => btn.addEventListener('click', deleteMovie));
-	editMovieBtns &&
-		editMovieBtns.forEach(btn => btn.addEventListener('click', editMovie));
-	updateMovieBtn && updateMovieBtn.addEventListener('click', updateMovie);
 });
 
 async function deleteUser(event) {
@@ -60,50 +65,60 @@ async function updateUser(event) {
 /**
  * Movie Event listeneres
  */
-async function editMovie(event) {
-	const movieId = event.target.attributes['data-movie-id'].value;
-
-	await axios.get(`/movies/${movieId}`);
-}
-
-async function deleteMovie(event) {
-	event.preventDefault();
-	const movieId = event.target.attributes['data-movie-id'].value;
-}
-
-async function updateMovie(event) {
-	const movieId = event.target.attributes['data-movie-id'].value;
-	const movieName = document.querySelector("[name='name']").value;
-	const movieGenres = document.querySelector("[name='genres']").value;
-	const movieImage = document.querySelector("[name='image']").value;
-	const moviePremiered = document.querySelector("[name='premiered']").value;
-	await axios.put('/movies', {
-		id: movieId,
-		name: movieName,
-		genres: movieGenres,
-		premiered: moviePremiered,
-		image: movieImage,
-	});
-}
-
-function permissionToString(permission) {
-	var permissions = {
-		viewMovies: 'View Movies',
-		createMovies: 'Create Movies',
-		deleteMovies: 'Delete Movies',
-		updateMovies: 'Update Movies',
-		viewSubscriptions: 'View Subscriptions',
-		createSubscriptions: 'Create Subscriptions',
-		deleteSubscriptions: 'Delete Subscriptions',
-		updateSubscriptions: 'Update Subscriptions',
-	};
-	return permissions[permission];
-}
 
 function openSubscriptionForm(event) {
 	var btnOpenForm = event.target;
-	var memberId = btnOpenForm.attributes['data-memberId'].value;
+	var memberId = btnOpenForm.attributes['data-memberid'].value;
 	var subscriptionForm = btnOpenForm.nextElementSibling;
 	subscriptionForm.style.display =
 		subscriptionForm.style.display == 'none' ? 'block' : 'none';
 }
+
+async function createSubscription(event) {
+	var memberCard = event.target.closest('[data-role="memberCard"]');
+	try {
+		if (!memberCard) throw 'member not exist';
+	} catch (error) {
+		alert('the operation cannot be completed');
+		console.log(error);
+	}
+	var memberId = memberCard.attributes['data-memberid'];
+	memberId = memberId.value;
+	var select = memberCard.querySelector('[data-role="movieSelect"]');
+	var selectedMovieId = select.value;
+	var date = memberCard.querySelector('[data-role="movieDate"]').value;
+	var subscriptionsList = memberCard.querySelector(
+		'[data-role="subscriptions"]'
+	);
+	var response = await axios.post('/subscriptions', {
+		memberId,
+		movieId: selectedMovieId,
+		date,
+	});
+	var subscriptions = await axios.get('/subscriptions', {
+		params: { memberId },
+	});
+
+	subscriptions = subscriptions.data;
+	var subscriptionsMarkup = `
+    <div class="list-group">
+      ${subscriptions
+				.reduce((acc, subscription) => {
+					var movie = subscription.movie;
+					var href = `/movies/${movie._id}`;
+
+					acc = acc.concat(`
+            <a class="list-group-item list-group-item-action" href=${href}>
+              ${movie.name}, ${subscription.date}
+            </a>
+          `);
+					return acc;
+				}, '')
+				.toString()}
+    </div>
+
+  `;
+	subscriptionsList && (subscriptionsList.innerHTML = subscriptionsMarkup);
+}
+
+function cancelSubscription(event) {}

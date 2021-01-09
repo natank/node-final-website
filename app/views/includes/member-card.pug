@@ -1,0 +1,26 @@
+.card(style="width: 25rem" data-memberid=member._id data-role="memberCard").mb-5
+  .card-body
+    h5.card-title.mb-2.font-weight-bold #{member.name}
+    p.card-text 
+      span.font-weight-bold.mr-2 Email: 
+      span #{member.email}
+    p.card-text 
+      span.font-weight-bold.mr-2 City:
+      span #{member.city}
+    .container-fluid.p-0.mb-4
+      a(href=`members/${member._id}`).btn.btn-outline-primary.mr-2 Edit
+      a(href=`members/delete/${member._id}`).btn.btn-outline-secondary Delete
+
+    .container-fluid.p-0
+      h6.card-title.mb-2.font-weight-bold Recent Subscriptions
+      
+      div(style="height: 5rem" data-role="subscriptions").mb-3
+        if(member.subscriptions.length)
+          include ./member-subscriptions
+        else
+          p This member has no subscriptions yet
+      button.btn.btn-primary.dropdown-toggle.mb-2(
+        role="showSubscriptionForm" 
+        data-memberId=member._id)  
+          | Subscribe to new movie
+      include ./subscription-form        

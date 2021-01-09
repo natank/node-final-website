@@ -14,7 +14,7 @@ only member Id - Return member movies {memberId, [{movie name, movie id, subscri
 only movie id - Return movie subscription {movieId, [member name, member id]}
 Both member and movie - Return member {memberId, {movie name, movie id, subscription date}}
 */
-router.get('/', subscriptionsController.findSubscriptions);
+router.get('/', subscriptionsController.findLatestSubscriptions);
 /**
  * query: memberId, movieId;
  */

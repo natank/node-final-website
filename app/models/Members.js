@@ -1,10 +1,9 @@
 import subscriptionsApi from '../API/subscriptions';
 
-export async function getMembers({ name, genres }) {
+export async function getMembers() {
+	var response;
 	try {
-		var response = await subscriptionsApi.get('/members', {
-			data: { name, genres },
-		});
+		response = await subscriptionsApi.get('/members');
 	} catch (error) {
 		console.log(error);
 	}

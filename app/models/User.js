@@ -4,10 +4,10 @@ import * as UserData from './UserData';
 
 export async function createUser(settings) {
 	var { username, firstName, lastName, sessionTimeOut, permissions } = settings;
-
-	var userId;
+	var userPermissions = createUserPermissions(permissions);
 
 	var userCredentials = new UserCredentials({ username });
+
 	try {
 		userCredentials = await userCredentials.save();
 	} catch (err) {
@@ -15,9 +15,9 @@ export async function createUser(settings) {
 		throw err;
 	}
 
-	userId = userCredentials._id.toString();
+	var userId = userCredentials._id.toString();
 
-	var settings = { userId, permissions };
+	var settings = { userId, permissions: userPermissions };
 	await UserPermissions.createUser(settings);
 
 	settings = { userId, firstName, lastName, sessionTimeOut };
@@ -27,8 +27,8 @@ export async function createUser(settings) {
 
 export async function updateUser(settings) {
 	var { id, firstName, lastName, sessionTimeOut, permissions } = settings;
-
-	await UserPermissions.updateUser(id, permissions);
+	var userPermissions = createUserPermissions(permissions);
+	await UserPermissions.updateUser(id, userPermissions);
 	await UserData.updateUser(id, {
 		firstName,
 		lastName,
@@ -143,4 +143,54 @@ async function getPermissionsAndData(userId) {
 		userId,
 	};
 	return user;
+}
+
+function createUserPermissions(permissions) {
+	var defaultPermissions = {
+		movies: {
+			view: false,
+			create: false,
+			delete: false,
+		},
+		subscriptions: {
+			view: false,
+			create: false,
+			delete: false,
+		},
+		isAdmin: false,
+	};
+	var userPermissions = { ...defaultPermissions };
+	permissions.forEach(permission => {
+		switch (permission) {
+			case 'viewMovies':
+				userPermissions['movies']['view'] = true;
+				break;
+			case 'createMovies':
+				userPermissions['movies']['create'] = true;
+				break;
+			case 'deleteMovies':
+				userPermissions['movies']['delete'] = true;
+				break;
+			case 'updateMovies':
+				userPermissions['movies']['update'] = true;
+				break;
+			case 'viewSubscriptions':
+				userPermissions['subscriptions']['view'] = true;
+				break;
+			case 'createSubscriptions':
+				userPermissions['subscriptions']['create'] = true;
+				break;
+			case 'deleteSubscriptions':
+				userPermissions['subscriptions']['delete'] = true;
+				break;
+			case 'updateSubscriptions':
+				userPermissions['subscriptions']['update'] = true;
+				break;
+			case 'isAdmin':
+				userPermissions['isAdmin'] = true;
+			default:
+				break;
+		}
+	});
+	return userPermissions;
 }

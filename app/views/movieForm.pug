@@ -6,7 +6,7 @@ block content
   
   include includes/movies-nav
   section.container.w-md-50
-    form.row.g-3(action="/create" method="POST")
+    form.row.g-3(action=movie ? `/movies/update/${movie._id}` : '/movies' method="POST")
       .form-group
         label(for="name") Name
         input(type="text" name="name" value=movie ? movie.name: "").form-control#name
@@ -20,7 +20,7 @@ block content
         label(for="image") Premiered
         input(type="text" name="premiered" value=movie ? movie.premiered:'').form-control#premiered
       .col-12
-        button(data-movie-op= movie ? "update":"create" data-movie-id=movie ? movie._id : '').btn.btn-secondary #{movie ? "Update" : "Create"}
+        button.btn.btn-secondary(type="submit") #{movie ? "Update" : "Create"}
 
 
   include ./includes/footer.pug

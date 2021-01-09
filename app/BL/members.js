@@ -1,11 +1,13 @@
 import { render } from 'pug';
 import * as Member from '../models/Members';
+import * as Movie from '../models/Movies';
 
 export async function getMembers(req, res, next) {
-	var { name, genres } = req.query;
+	console.log('members');
 	try {
-		var members = await Member.getMembers({ name, genres });
-		res.render('./members', { members });
+		var members = await Member.getMembers();
+		var movies = await Movie.findMovies();
+		res.render('./members', { members, movies });
 	} catch (err) {
 		res.status(500).end();
 		throw err;

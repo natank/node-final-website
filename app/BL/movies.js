@@ -15,10 +15,10 @@ export async function findMovies(req, res, next) {
 export async function getMovie(req, res, next) {
 	try {
 		const movieId = req.params.id;
-		var movie = movieId ? await Movie.findById(movieId): undefined;
-		res.render('./movieForm', {movie})
+		var movie = movieId ? await Movie.findById(movieId) : undefined;
+		res.render('./movieForm', { movie });
 	} catch (err) {
-		req.flash("error", "movie not found")
+		req.flash('error', 'movie not found');
 		res.redirect('/movies');
 		throw err;
 	}
@@ -34,7 +34,7 @@ export async function postCreateMovie(req, res, next) {
 			image,
 			premiered,
 		});
-		res.redirect('./movies')
+		res.redirect('./movies');
 	} catch (err) {
 		console.log(err);
 		next(err);
@@ -45,7 +45,7 @@ export async function deleteMovie(req, res, next) {
 	var { id } = req.params;
 	try {
 		await Movie.deleteMovie(id);
-		res.redirect('/movies')
+		res.redirect('/movies');
 	} catch (err) {
 		console.log(err);
 		res.status(500).end();
@@ -54,7 +54,7 @@ export async function deleteMovie(req, res, next) {
 
 export async function updateMovie(req, res, next) {
 	var { name, genres, image, premiered } = req.body;
-	var {id} = req.params;
+	var { id } = req.params;
 	try {
 		var movie = await Movie.updateMovie({
 			id,
@@ -69,5 +69,3 @@ export async function updateMovie(req, res, next) {
 		console.log(err);
 	}
 }
-
-

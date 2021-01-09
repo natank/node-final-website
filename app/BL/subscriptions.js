@@ -1,6 +1,6 @@
 import * as Subscriptions from '../models/Subscriptions';
 
-export async function findSubscriptions(req, res, next) {
+export async function findLatestSubscriptions(req, res, next) {
 	var { memberId, movieId } = req.query;
 	try {
 		var subscriptions = await Subscriptions.getSubscriptions({

@@ -1,0 +1,13 @@
+.card(style="width: 27rem").mb-5
+  .card-body
+    h5.card-title #{`${movie.name}, ${movie.premiered && movie.premiered.split('-')[0]}` }
+    h6.card-subtitle.mb-2.text-muted #{movie.genres}
+    
+    .row.mb-2
+      .col.col-3
+        img(src=movie.image style="height: 8rem").d-block
+      .col.col-9.border.p-2
+        h6.card-subtitle.mb-2 Subscriptions Watched
+        include ./movie-subscriptions
+    a(href=`movies/${movie._id}`)#editMovie.btn.btn-primary.mr-2 Edit
+    a(href=`movies/delete/${movie._id}`)#deleteMovie.btn.btn-primary Delete
