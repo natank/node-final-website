@@ -9,5 +9,5 @@
       .col.col-9.border.p-2
         h6.card-subtitle.mb-2 Subscriptions Watched
         include ./movie-subscriptions
-    a(href=`movies/${movie._id}`)#editMovie.btn.btn-primary.mr-2 Edit
-    a(href=`movies/delete/${movie._id}`)#deleteMovie.btn.btn-primary Delete
+    a(href=`movies/${movie.id}`)#editMovie.btn.btn-primary.mr-2 Edit
+    a(href=`movies/delete/${movie.id}`)#deleteMovie.btn.btn-primary Delete

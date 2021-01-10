@@ -22,45 +22,47 @@ block content
         .row.g-3
           .col-6
             .form-check
-              input.form-check-input(type="checkbox" id="viewMovies" name="permissions" value="viewMovies" checked=((editedUser && editedUser.permissions.includes('viewMovies')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="viewMovies" name="permissions" value="viewMovies" checked=(editedUser && editedUser.permissions["movies"]["view"]) ? 'checked':undefined)
               label.form-check-label(for="viewMovies")
                 | View Movies
+          
             .form-check
-              input.form-check-input(type="checkbox" id="createMovies" name="permissions" value="createMovies" checked=((editedUser && editedUser.permissions.includes('createMovies')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="createMovies" name="permissions" value="createMovies" checked=(editedUser && editedUser.permissions["movies"]["create"]) ? 'checked':undefined)
               label.form-check-label(for="createMovies")
                 | Create Movies
             .form-check
-              input.form-check-input(type="checkbox" id="deleteMovies" name="permissions" value="deleteMovies" checked=((editedUser && editedUser.permissions.includes('deleteMovies')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="deleteMovies" name="permissions" value="deleteMovies" checked=(editedUser && editedUser.permissions["movies"]["delete"]) ? 'checked':undefined)
               label.form-check-label(for="deleteMovies")
                 | Delete Movies
             .form-check
-              input.form-check-input(type="checkbox" id="updateMovies" name="permissions" value="updateMovies" checked=((editedUser && editedUser.permissions.includes('updateMovies')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="updateMovies" name="permissions" value="updateMovies" checked=(editedUser && editedUser.permissions["movies"]["update"]) ? 'checked':undefined)
               label.form-check-label(for="updateMovies")
                 | Update Movies
           .col-6
             .form-check
-              input.form-check-input(type="checkbox" id="viewSubscriptions" name="permissions" value="viewSubscriptions" checked=((editedUser && editedUser.permissions.includes('viewSubscriptions')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="viewSubscriptions" name="permissions" value="viewSubscriptions" checked=(editedUser && editedUser.permissions["subscriptions"]["view"] ? 'checked':undefined))
               label.form-check-label(for="viewSubscriptions")
                 | View Subscriptions
             .form-check
-              input.form-check-input(type="checkbox" id="createSubscriptions" name="permissions" value="createSubscriptions" checked=((editedUser && editedUser.permissions.includes('createSubscriptions')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="createSubscriptions" name="permissions" value="createSubscriptions" checked=(editedUser && editedUser.permissions["subscriptions"]["create"] ? 'checked':undefined))
               label.form-check-label(for="createSubscriptions")
                 | Create Subscriptions
             .form-check
-              input.form-check-input(type="checkbox" id="deleteSubscriptions" name="permissions" value="deleteSubscriptions" checked=((editedUser && editedUser.permissions.includes('deleteSubscriptions')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="deleteSubscriptions" name="permissions" value="deleteSubscriptions" checked=(editedUser && editedUser.permissions["subscriptions"]["delete"] ? 'checked':undefined))
               label.form-check-label(for="deleteSubscriptions")
                 | Delete Subscriptions
             .form-check
-              input.form-check-input(type="checkbox" id="updateSubscriptions" name="permissions" value="updateSubscriptions" checked=((editedUser && editedUser.permissions.includes('updateSubscriptions')) ? 'checked':undefined))
+              input.form-check-input(type="checkbox" id="updateSubscriptions" name="permissions" value="updateSubscriptions" checked=(editedUser && editedUser.permissions ? 'checked':undefined))
               label.form-check-label(for="updateSubscriptions")
                 | Update Subscriptions
+
       .col-12      
         .form-check
-          input.form-check-input(type="checkbox" id="isAdmin" name="permissions" value="isAdmin" checked=((editedUser && editedUser.permissions.includes('isAdmin')) ? 'checked':undefined))
+          input.form-check-input(type="checkbox" id="isAdmin" name="permissions" value="isAdmin" checked=(editedUser && editedUser.permissions['isAdmin'] ? 'checked':undefined))
           label.form-check-label(for="isAdmin")
             | Admin      
       .col-12
         button#updateUser.btn.btn-secondary= (editedUser? `Update`:`Create`)
       
 
-  include ./includes/footer.pug
+    //include ./includes/footer.pug

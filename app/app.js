@@ -19,7 +19,7 @@ import * as moviesController from './BL/movies';
 import * as authController from './BL/auth';
 import * as User from './models/User';
 
-import { isLoggedIn, isAdmin } from './BL/middleware/auth';
+import { isAuth } from './BL/middleware/auth';
 import hasTransactions from './BL/middleware/hasTransactions';
 
 connectDB();
@@ -139,13 +139,13 @@ app.use(setLocals);
 app.get('/', menuRoutes);
 /**Movies Routes */
 
-app.use('/movies', movieRouter);
+app.use('/movies', isAuth, movieRouter);
 /**Members Routes */
-app.use('/members', memberRouter);
+app.use('/members', isAuth, memberRouter);
 /**Subscriptions Routes */
-app.use('/subscriptions', subscriptionRouter);
+app.use('/subscripti1ons', isAuth, subscriptionRouter);
 /**User Routes */
-app.use('/users', /*isAdmin,*/ userRouter);
+app.use('/users', userRouter);
 
 /**Auth Routes */
 app.use('/auth', authRouter);

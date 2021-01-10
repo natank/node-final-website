@@ -74,10 +74,7 @@ export async function postUpdateUser(req, res, next) {
 	res.redirect('/users');
 }
 
-/**Middleware */
-export function isAuth(req, res, next) {
-	return next();
-}
+
 
 export var validateUsername = body('username') //validate username
 	.custom(async (value, { req }) => {

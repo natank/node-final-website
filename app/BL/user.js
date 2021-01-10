@@ -36,7 +36,6 @@ export async function getUpdateUser(req, res) {
 	var user = await User.findById(userId);
 
 	if (user) {
-		permissionsToString(user);
 		res.render('userForm', { editedUser: user });
 	} else {
 		req.flash('error', 'user not found');
@@ -107,7 +106,7 @@ export async function postActivateAccount(req, res) {
 		let hashedPassword = await bcrypt.hash(password, 12);
 		var userId = req.userToActivate.id;
 		await User.updateUserPassword(userId, hashedPassword);
-		res.status(200).end();
+		res.redirect('/login')
 	}
 }
 
@@ -116,16 +115,16 @@ function permissionsToString(user) {
 	for (const [key, value] of Object.entries(user.permissions.movies)) {
 		switch (key) {
 			case 'view':
-				if (value == true) permissions.push('viewMovies');
+				if (value == true) permissions.push('View Movies');
 				break;
 			case 'create':
-				if (value == true) permissions.push('createMovies');
+				if (value == true) permissions.push('Create Movies');
 				break;
 			case 'delete':
-				if (value == true) permissions.push('deleteMovies');
+				if (value == true) permissions.push('Delete Movies');
 				break;
 			case 'update':
-				if (value == true) permissions.push('updateMovies');
+				if (value == true) permissions.push('Update Movies');
 				break;
 			default:
 				break;
@@ -134,20 +133,21 @@ function permissionsToString(user) {
 	for (const [key, value] of Object.entries(user.permissions.subscriptions)) {
 		switch (key) {
 			case 'view':
-				if (value == true) permissions.push('viewSubscriptions');
+				if (value == true) permissions.push('View Subscriptions');
 				break;
 			case 'create':
-				if (value == true) permissions.push('createSubscriptions');
+				if (value == true) permissions.push('Create Subscriptions');
 				break;
 			case 'delete':
-				if (value == true) permissions.push('deleteSubscriptions');
+				if (value == true) permissions.push('Delete Subscriptions');
 				break;
 			case 'update':
-				if (value == true) permissions.push('updateSubscriptions');
+				if (value == true) permissions.push('Update Subscriptions');
 				break;
 			default:
 				break;
 		}
 	}
+	user.permissions.isAdmin ? permissions.push('Admin') : null;
 	user.permissions = permissions;
 }
