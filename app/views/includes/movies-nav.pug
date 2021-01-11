@@ -3,7 +3,8 @@
     li.nav-item
       a(href="/movies").nav-link#allMovies All Movies
     li.nav-item
-      a(href="/movies/create").nav-link#addMovie Add Movie
+      - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.create) ? "":"disabled"
+      a(href="/movies/create" class=disabled).nav-link#addMovie Add Movie
     li.nav-item(style="margin-left: auto")
       form.form-inline.my-2.my-lg-0.d-flex(action="/movies", method="GET")
         button.btn.btn-outline-success.mr-2.my-sm-0.d-block(type="submit") Find Movie

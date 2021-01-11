@@ -1,4 +1,5 @@
 import axios from 'axios';
+let checkSubscriptions, checkMovies, checkViewMovies, checkViewSubscriptions;
 
 document.addEventListener('DOMContentLoaded', event => {
 	let deleteUserBtn = document.querySelector('#deleteUser');
@@ -9,15 +10,31 @@ document.addEventListener('DOMContentLoaded', event => {
 	let btnSubscription = document.querySelectorAll(
 		'[data-role="createSubscription"]'
 	);
-	let btnCancelSubscription = document.querySelectorAll(
-		'[data-role="cancelSubscription"]'
+
+	checkViewSubscriptions = document.querySelector(
+		'[role="checkViewSubscriptions"]'
 	);
+	checkSubscriptions = document.querySelectorAll('[role="checkSubscriptions"]');
+	checkViewMovies = document.querySelector('[role="checkViewMovies"]');
+	checkMovies = document.querySelectorAll('[role="checkMovies"]');
+
+	checkViewSubscriptions &&
+		checkViewSubscriptions.addEventListener('click', viewPermissionChecked);
+
+	checkViewMovies &&
+		checkViewMovies.addEventListener('click', viewPermissionChecked);
+
+	checkSubscriptions &&
+		checkSubscriptions.forEach(checkbox =>
+			checkbox.addEventListener('click', permissionChecked)
+		);
+	checkMovies &&
+		checkMovies.forEach(checkbox =>
+			checkbox.addEventListener('click', permissionChecked)
+		);
 
 	btnSubscription.forEach(btn =>
 		btn.addEventListener('click', createSubscription)
-	);
-	btnCancelSubscription.forEach(btn =>
-		btn.addEventListener('click', cancelSubscription)
 	);
 
 	btnSubscriptionFormShow &&
@@ -121,4 +138,21 @@ async function createSubscription(event) {
 	subscriptionsList && (subscriptionsList.innerHTML = subscriptionsMarkup);
 }
 
-function cancelSubscription(event) {}
+function viewPermissionChecked(event) {
+	var checked = event.target.checked;
+	var role = event.target.getAttribute('role');
+	if (!checked && role == 'checkViewSubscriptions') {
+		checkSubscriptions.forEach(checkbox => (checkbox.checked = false));
+	} else if (!checked && role == 'checkViewMovies') {
+		checkMovies.forEach(checkbox => (checkbox.checked = false));
+	}
+}
+
+function permissionChecked(event) {
+	var checked = event.target.checked;
+	var role = event.target.getAttribute('role');
+	if (checked) {
+		(role == 'checkSubscriptions' && (checkViewSubscriptions.checked = true)) ||
+			(role == 'checkMovies' && (checkViewMovies.checked = true));
+	}
+}

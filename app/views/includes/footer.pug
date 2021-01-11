@@ -4,13 +4,16 @@
   div.footer__main
     div.footer__content
       h4.mb-4
-        a(href="/create").text-decoration-none Create Movies
+        - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.movies.create) ? "":"disabled"
+        a(href="/movies/create" class=disabled).text-decoration-none Create Movies
     div.footer__content
       h4.mb-4
-        a(href="/search").text-decoration-none Search Movies
+        - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.movies.view) ? "":"disabled"      
+        a(href="/search" class=disabled).text-decoration-none Search Movies
     div.footer__content
       h4.mb-4
-        a(href="/users").text-decoration-none Manage Users
+        - var disabled = authUser && authUser.permissions.isAdmin ? "":"disabled"
+        a(href="/users" class=disabled).text-decoration-none Manage Users
 
   div.footer__copyrights.text-center
     p All Rights Reserved

@@ -8,8 +8,10 @@
       span.font-weight-bold.mr-2 City:
       span #{member.city}
     .container-fluid.p-0.mb-4
-      a(href=`members/${member._id}`).btn.btn-outline-primary.mr-2 Edit
-      a(href=`members/delete/${member._id}`).btn.btn-outline-secondary Delete
+      - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.update) ? "":"disabled"
+      a(href=`members/${member._id}` class=disabled).btn.btn-outline-primary.mr-2 Edit
+      - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.delete) ? "":"disabled"
+      a(href=`members/delete/${member._id}` class=disabled ).btn.btn-outline-secondary Delete
 
     .container-fluid.p-0
       h6.card-title.mb-2.font-weight-bold Recent Subscriptions
@@ -19,8 +21,11 @@
           include ./member-subscriptions
         else
           p This member has no subscriptions yet
+      - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.update) ? "":"disabled"
       button.btn.btn-primary.dropdown-toggle.mb-2(
         role="showSubscriptionForm" 
-        data-memberId=member._id)  
+        data-memberId=member._id
+        class=disabled
+        )  
           | Subscribe to new movie
       include ./subscription-form        

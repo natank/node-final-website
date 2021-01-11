@@ -3,7 +3,6 @@ import * as Member from '../models/Members';
 import * as Movie from '../models/Movies';
 
 export async function getMembers(req, res, next) {
-	console.log('members');
 	try {
 		var members = await Member.getMembers();
 		var movies = await Movie.findMovies();

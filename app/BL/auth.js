@@ -25,6 +25,7 @@ export async function postLogin(req, res, next) {
 
 	function signInUser() {
 		req.session.user = req.user;
+		req.session.cookie.maxAge = Number(req.user.sessionTimeOut) * 60000;
 
 		res.redirect('/');
 	}
@@ -73,8 +74,6 @@ export async function postUpdateUser(req, res, next) {
 
 	res.redirect('/users');
 }
-
-
 
 export var validateUsername = body('username') //validate username
 	.custom(async (value, { req }) => {

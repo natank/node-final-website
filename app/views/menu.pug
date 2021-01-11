@@ -9,11 +9,14 @@ block content
     section.container.actions
       div.row.menu
         div.col.col-sm-12.col-md-4.d-flex.justify-content-center.mb-4
-          a(href="/members").btn.btn-secondary.p-5.text-decoration-none Members
+          - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.view) ? "":"disabled"
+          a(href="/members" class=`${disabled}`).btn.btn-secondary.p-5.text-decoration-none.menu__btn Members
         div.col.col-sm-12.col-md-4.d-flex.justify-content-center.mb-4
-          a(href="/movies").btn.btn-secondary.p-5.text-decoration-none Movies
+          - disabled = authUser && (authUser.permissions.isAdmin ||authUser.permissions.movies.view) ? "":"disabled"
+          a(href="/movies" class=`${disabled}`).btn.btn-secondary.p-5.text-decoration-none.menu__btn Movies
         div.col.col-sm-12.col-md-4.d-flex.justify-content-center.mb-4
-          a(href="/users").btn.btn-secondary.p-5.text-decoration-none Users
+          - disabled = authUser && authUser.permissions.isAdmin ? "":"disabled"
+          a(href="/users" class=`${disabled}`).btn.btn-secondary.p-5.text-decoration-none.menu__btn Users
 
   include ./includes/footer.pug 
 

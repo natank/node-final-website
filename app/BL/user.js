@@ -106,7 +106,7 @@ export async function postActivateAccount(req, res) {
 		let hashedPassword = await bcrypt.hash(password, 12);
 		var userId = req.userToActivate.id;
 		await User.updateUserPassword(userId, hashedPassword);
-		res.redirect('/login')
+		res.redirect('/login');
 	}
 }
 

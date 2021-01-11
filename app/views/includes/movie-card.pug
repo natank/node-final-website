@@ -4,10 +4,12 @@
     h6.card-subtitle.mb-2.text-muted #{movie.genres}
     
     .row.mb-2
-      .col.col-3
+      .col.col-12.col-sm-3.mb-2
         img(src=movie.image style="height: 8rem").d-block
-      .col.col-9.border.p-2
+      .col.col-12.col-sm-9.border.p-2
         h6.card-subtitle.mb-2 Subscriptions Watched
         include ./movie-subscriptions
-    a(href=`movies/${movie.id}`)#editMovie.btn.btn-primary.mr-2 Edit
-    a(href=`movies/delete/${movie.id}`)#deleteMovie.btn.btn-primary Delete
+    - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.update) ? "":"disabled"        
+    a(href=`movies/${movie.id}` class=disabled)#editMovie.btn.btn-primary.mr-2 Edit
+    - disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.delete) ? "":"disabled"        
+    a(href=`movies/delete/${movie.id}` class=disabled)#deleteMovie.btn.btn-primary Delete

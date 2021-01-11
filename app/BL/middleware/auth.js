@@ -18,95 +18,95 @@ export const isAdmin = (req, res, next) => {
 
 /**Middleware */
 export function isAuth(req, res, next) {
-	var {user} = req.session
-	var route = {url: req.originalUrl, method: req.method}
-	if(!user) {
-		req.flash("error", "You must be logged in to access this route")
-		res.redirect('/login')
-	} else if(!checkPermissionsToRoute(user,route)){
-		req.flash("error", "You don't have the right permissions to access this route")
-		res.redirect('/')
+	var { user } = req.session;
+	var route = { url: req.originalUrl, method: req.method };
+	if (!user) {
+		req.flash('error', 'You must be logged in to access this route');
+		res.redirect('/login');
+	} else if (!checkPermissionsToRoute(user, route)) {
+		req.flash(
+			'error',
+			"You don't have the right permissions to access this route"
+		);
+		res.redirect('/');
 	} else {
-		return next()
+		return next();
 	}
-
 }
 
-function checkPermissionsToRoute(user, currRoute){
-	if(user.permissions.isAdmin) return true
+function checkPermissionsToRoute(user, currRoute) {
+	if (user.permissions.isAdmin) return true;
 	var requiredPermissions = [
 		// Movie permissions
 		{
 			url: /^\/movies$/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "view"
-			}
+				movies: 'view',
+			},
 		},
 		{
 			url: /^\/movies\/delete/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "delete"
-			}
+				movies: 'delete',
+			},
 		},
 		{
 			url: /^\/movies\/create/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "create"
-			}
+				movies: 'create',
+			},
 		},
 		{
 			url: /^\/movies\/.*/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "update"
-			}
+				movies: 'update',
+			},
 		},
 		// Member permissions
 		{
 			url: /^\/members/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				subscriptions: "view"
-			}
+				subscriptions: 'view',
+			},
 		},
 		{
 			url: /^\/members\/delete/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "delete"
-			}
+				movies: 'delete',
+			},
 		},
 		{
 			url: /^\/members\/create/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "create"
-			}
+				movies: 'create',
+			},
 		},
 		{
 			url: /^\/members\/.*/,
-			method: "GET",
+			method: 'GET',
 			permission: {
-				movies: "update"
-			}
+				movies: 'update',
+			},
 		},
-	]
+	];
 
-	var requiredPermission = requiredPermissions.find(requiredPermission=>{
-		
-		var routeMatch = requiredPermission.url.test(currRoute.url)
-		var result = routeMatch && requiredPermission.method == currRoute.method
-		return result
-	})
-	if(requiredPermission){
-		var [data, permission] = Object.entries(requiredPermission.permission)[0]
-		var hasPermission = user.permissions[data][permission]
-		return hasPermission
+	var requiredPermission = requiredPermissions.find(requiredPermission => {
+		var routeMatch = requiredPermission.url.test(currRoute.url);
+		var result = routeMatch && requiredPermission.method == currRoute.method;
+		return result;
+	});
+	if (requiredPermission) {
+		var [data, permission] = Object.entries(requiredPermission.permission)[0];
+		var hasPermission = user.permissions[data][permission];
+		return hasPermission;
 	}
 
 	return false;
 }
-

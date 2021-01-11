@@ -1,19 +1,32 @@
-nav.navbar.navbar--primary.navbar-expand-lg.navbar-light
+nav.navbar.navbar-expand-lg.navbar-light
   a.navbar-brand.text-decoration-none(href='/') 
     h2.navbar-brand__main Movies
-  button.navbar-toggler(type='button' data-toggle='collapse' 
+  button.navbar-toggler.collapsed(type='button' data-toggle='collapse' 
     data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
     span.navbar-toggler-icon
-  .collapse.navbar-collapse#navbarSupportedContent.justify-content-end
+  .collapse.navbar-collapse#navbarSupportedContent
     ul.navbar-nav
       li.nav-item
-        if authUser
-            .nav-link.text-capitalize Hello #{authUser.firstName}
+        - var disabled = authUser && (authUser.permissions.isAdmin || authUser.permissions.subscriptions.view) ? "":"disabled"
+        a(href='/members' class=disabled).nav-link.text-uppercase Members
+      
       li.nav-item
+        - disabled = authUser && (authUser.permissions.isAdmin ||authUser.permissions.movies.view) ? "":"disabled"
+        a(href='/movies' class=disabled).nav-link.text-uppercase Movies
+
+      li.nav-item
+        - var disabled = authUser && authUser.permissions.isAdmin ? "":"disabled"
+        a(href='/users' class=disabled).nav-link.text-uppercase Users
+    ul.navbar-nav.d-flex.justify-content-end(style="margin-left: auto")
+        if authUser
+          li.nav-item
+                a.nav-link.text-capitalize(style="cursor: none" href="#") Hello #{authUser.firstName}
         if !authUser
-          a(href='/login').nav-link.text-secondary.text-decoration-none
-            |  Login
-        else
-          a(href='/logout' role='button' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false").nav-link#navbarDropdown.text-secondary.text-decoration-none
-            span logout
+          li.nav-item
+            a(href='/login').nav-link.text-decoration-none
+              |  Login
+        if authUser
+          li.nav-item
+            a(href='/logout').nav-link.text-decoration-none
+              | logout
 
