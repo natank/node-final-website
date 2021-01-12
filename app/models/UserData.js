@@ -1,4 +1,4 @@
-import * as usersDal from '../DAL/UserData';
+import * as usersDal from '../DAL/userData';
 
 export async function createUser(settings) {
 	var users;
