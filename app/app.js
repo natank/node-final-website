@@ -143,7 +143,7 @@ app.use('/movies', isAuth, movieRouter);
 /**Members Routes */
 app.use('/members', isAuth, memberRouter);
 /**Subscriptions Routes */
-app.use('/subscripti1ons', isAuth, subscriptionRouter);
+app.use('/subscriptions', isAuth, subscriptionRouter);
 /**User Routes */
 app.use('/users', userRouter);
 

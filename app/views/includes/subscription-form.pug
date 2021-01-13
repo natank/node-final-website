@@ -3,11 +3,7 @@ div.mb-2(style="display: none")
   .subscriptionDetails
     select(name="movies" data-role="movieSelect" style="width: 7em").d-block.mb-2
       each movie in movies
-        option(value=movie._id) #{movie.name}
-          
-      option(value="movie2dssasfdsafsd") movie2fasfdsasdfafsdsfd
-      option(value="movie3") movie3
-      option(value="movie4") movie4
+        option(value=movie.id) #{movie.name}
     input(type="date" id="start" data-role="movieDate" value="2018-07-22").d-block.mb-2
       
 

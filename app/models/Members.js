@@ -7,6 +7,7 @@ export async function getMembers() {
 	} catch (error) {
 		console.log(error);
 	}
+
 	return response.data;
 }
 

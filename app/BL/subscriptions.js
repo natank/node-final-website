@@ -14,16 +14,7 @@ export async function findLatestSubscriptions(req, res, next) {
 	}
 }
 
-export async function findSubscription(req, res, next) {
-	try {
-		const memberId = req.params.id;
-		var member = await Subscriptions.getMember(memberId);
-		res.status(200).json(member);
-	} catch (err) {
-		res.status(500).end();
-		throw err;
-	}
-}
+
 
 export async function createSubscription(req, res, next) {
 	const { memberId, movieId, date } = req.body;
