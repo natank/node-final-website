@@ -1,5 +1,7 @@
 import * as Subscriptions from '../models/Subscriptions';
 
+
+var customError = "An error occured please try again later"
 export async function findLatestSubscriptions(req, res, next) {
 	var { memberId, movieId } = req.query;
 	try {
@@ -10,7 +12,7 @@ export async function findLatestSubscriptions(req, res, next) {
 		res.status(200).json(subscriptions);
 	} catch (err) {
 		res.status(500).end(err);
-		throw err;
+		handleError(req, customError, err)
 	}
 }
 
@@ -28,7 +30,7 @@ export async function createSubscription(req, res, next) {
 		res.status(200).json(subscription);
 	} catch (err) {
 		res.status(500).end(err);
-		throw err;
+		handleError(req, customError, err )
 	}
 }
 
@@ -54,4 +56,9 @@ export async function updateSubscription(req, res, next) {
 		res.status(500).end();
 		console.log(err);
 	}
+}
+
+function handleError(req, customError, error){
+	console.log(error)
+	req.flash('error', customError)
 }

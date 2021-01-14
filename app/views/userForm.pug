@@ -52,7 +52,7 @@ block content
               label.form-check-label(for="deleteSubscriptions")
                 | Delete Subscriptions
             .form-check
-              input.form-check-input(type="checkbox" role="checkSubscriptions" id="updateSubscriptions" name="permissions" value="updateSubscriptions" checked=(editedUser && editedUser.permissions ? 'checked':undefined))
+              input.form-check-input(type="checkbox" role="checkSubscriptions" id="updateSubscriptions" name="permissions" value="updateSubscriptions" checked=(editedUser && editedUser.permissions["subscriptions"]["update"] ? 'checked':undefined))
               label.form-check-label(for="updateSubscriptions")
                 | Update Subscriptions
 
