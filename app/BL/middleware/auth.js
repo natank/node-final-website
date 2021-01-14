@@ -78,21 +78,35 @@ function checkPermissionsToRoute(user, currRoute) {
 			url: /^\/members\/delete/,
 			method: 'GET',
 			permission: {
-				movies: 'delete',
+				subscriptions: 'delete',
 			},
 		},
 		{
 			url: /^\/members\/create/,
 			method: 'GET',
 			permission: {
-				movies: 'create',
+				subscriptions: 'create',
 			},
 		},
 		{
 			url: /^\/members\/.*/,
 			method: 'GET',
 			permission: {
-				movies: 'update',
+				subscriptions: 'update',
+			},
+		},
+		{
+			url: /^\/subscriptions$/,
+			method: 'POST',
+			permission: {
+				subscriptions: 'update'
+			},
+		},
+		{
+			url: /^\/subscriptions.*/,
+			method: 'GET',
+			permission: {
+				movies: 'view',
 			},
 		},
 	];
