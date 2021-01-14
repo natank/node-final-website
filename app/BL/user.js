@@ -97,18 +97,23 @@ export async function postUpdateUser(req, res, next) {
 }
 
 export async function postActivateAccount(req, res) {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		var ers = errors.array();
-		res.status(200).json(ers);
-	} else {
-		var { username, password } = req.body;
-		// console.log(`password entered: ${password}`)
-		let hashedPassword = await bcrypt.hash(password, 12);
-		var userId = req.userToActivate.id;
-		await User.updateUserPassword(userId, hashedPassword);
-		res.redirect('/login');
+	try {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			var ers = errors.array();
+			res.status(200).json(ers);
+		} else {
+			var { username, password } = req.body;
+			// console.log(`password entered: ${password}`)
+			let hashedPassword = await bcrypt.hash(password, 12);
+			var userId = req.userToActivate.id;
+			await User.updateUserPassword(userId, hashedPassword);
+			res.redirect('/login');
+		}	
+	} catch (error) {
+		console.log(err)
 	}
+	
 }
 
 function permissionsToString(user) {
