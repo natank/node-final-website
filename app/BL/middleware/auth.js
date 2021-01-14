@@ -96,6 +96,13 @@ function checkPermissionsToRoute(user, currRoute) {
 			},
 		},
 		{
+			url: /^\/members\/update\/.*/,
+			method: 'POST',
+			permission: {
+				subscriptions: 'update',
+			},
+		},
+		{
 			url: /^\/subscriptions$/,
 			method: 'POST',
 			permission: {

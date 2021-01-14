@@ -58,7 +58,6 @@ export async function getDeleteMember(req, res, next) {
 export async function postUpdateMember(req, res, next) {
 	var { name, email, city } = req.body;
 	var { id } = req.params;
-	console.log(`id = ${id}`);
 	try {
 		var member = await Member.updateMember({ id, name, email, city });
 		res.redirect('/members');
